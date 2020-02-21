@@ -1,0 +1,35 @@
+{
+  "name": "react-app-rewire-alias",
+  "version": "0.1.0",
+  "description": "Alias for rewired create-react-app",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oklas/react-app-rewire-alias"
+  },
+  "keywords": [
+    "alias",
+    "rewire",
+    "outside of src",
+    "imports restriction",
+    "monorepo",
+    "multirepo",
+    "create-react-app",
+    "react-app-rewire"
+  ],
+  "author": "Serguei Okladnikov <oklaspec@gmail.com> (https://github.com/oklas)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/oklas/react-app-rewire-alias/issues"
+  },
+  "homepage": "https://github.com/oklas/react-app-rewire-alias",
+  "devDependencies": {
+  },
+  "peerDependencies": {
+    "react-app-rewired": "1 || ^2"
+  },
+  "dependencies": {
+  },
+  "scripts": {
+  }
+}
