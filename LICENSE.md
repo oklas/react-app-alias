@@ -1,7 +1,7 @@
 The MIT License (MIT)
 =====================
 
-Copyright (c) 2016-present Serguei Okladnikov <oklaspec@gmail.com>
+Copyright (c) 2019-present Serguei Okladnikov <oklaspec@gmail.com>
 ------------------------------------------------------------------
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
