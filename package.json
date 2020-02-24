@@ -1,6 +1,6 @@
 {
   "name": "react-app-rewire-alias",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Alias for rewired create-react-app",
   "main": "index.js",
   "repository": {
