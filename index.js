@@ -1,4 +1,5 @@
 const fs = require('fs')
+const path = require('path')
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
 const paths = require('react-scripts/config/paths')
 
@@ -39,7 +40,8 @@ function expandPluginsScope(plugins, dirs, files) {
 
 function alias(aliasMap) {
   const aliasLocal = Object.keys(aliasMap).reduce( (a,i) => {
-    a[i] = path.resolve(paths.appSrc, aliasMap[i])
+    a[i] = path.resolve(paths.appPath, aliasMap[i])
+    return a
   }, {})
   return function(config) {
     expandResolveAlias(config.resolve, aliasLocal)
