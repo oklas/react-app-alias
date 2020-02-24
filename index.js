@@ -38,10 +38,13 @@ function expandPluginsScope(plugins, dirs, files) {
 }
 
 function alias(aliasMap) {
+  const aliasLocal = Object.keys(aliasMap).reduce( (a,i) => {
+    a[i] = path.resolve(paths.appSrc, aliasMap[i])
+  }, {})
   return function(config) {
-    expandResolveAlias(config.resolve, aliasMap)
-    expandRulesInclude(config.module.rules, Object.values(aliasMap))
-    expandPluginsScope(config.resolve.plugins, Object.values(aliasMap))
+    expandResolveAlias(config.resolve, aliasLocal)
+    expandRulesInclude(config.module.rules, Object.values(aliasLocal))
+    expandPluginsScope(config.resolve.plugins, Object.values(aliasLocal))
   }
 }
 
