@@ -50,6 +50,37 @@ function alias(aliasMap) {
   }
 }
 
+function configPaths(configPath = '') {
+  const confPath = (
+    configPath.length > 0 && fs.existsSync(path.resolve(paths.appPath, configPath)) ?
+      path.resolve(paths.appPath, configPath) :
+    fs.existsSync(path.resolve(paths.appPath, 'tsconfig.json')) ?
+      path.resolve(paths.appPath, 'tsconfig.json') :
+    fs.existsSync(path.resolve(paths.appPath, 'jsconfig.json')) ?
+      path.resolve(paths.appPath, 'jsconfig.json') :
+    ''
+  )
+
+  if(!confPath)
+    throw Error('react-app-rewire-alias:configPaths: there is no config file found')
+
+  const conf = require(confPath)
+
+  if(typeof conf.compilerOptions.paths !== 'object' )
+    throw Error('react-app-rewire-alias:configPaths: array expected for paths')
+
+  if(!conf.compilerOptions || !conf.compilerOptions.paths)
+    return {}
+
+  return Object.keys(conf.compilerOptions.paths).reduce( (a, path) => {
+    const value = conf.compilerOptions.paths[path]
+    const target = Array.isArray(value) ? value[0] : value
+    a[path.replace(/\/\*$/,'')] = target.replace(/\/\*$/,'')
+    return a
+  }, {})
+}
+
 module.exports = {
-  alias
+  alias,
+  configPaths,
 }
