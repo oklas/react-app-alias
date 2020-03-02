@@ -1,9 +1,19 @@
 # Alias solution for rewired create-react-app
 
+Currently `create-react-app` do not support more then one `src` dir in root
+directory. Monorepo, multirepo and library projects with examples etc,
+requires more then only one directories like `src`
+
+This is only alias for `create-react-app` and this is not replacement for
+mutipackage management tools like [lerna](https://github.com/lerna/lerna)
+
+[![Npm package](https://img.shields.io/npm/v/react-app-rewire-alias.svg?style=flat)](https://npmjs.com/package/react-app-rewire-alias)
+
 #### This allows:
 
-* quality and secure exports outside from src
+* quality and secure exports outside from `src` (identically `src`)
 * absolute imports
+* any `./dir` at root outside of `src` with babel and etc cra features
 
 #### This is designed for:
 
@@ -53,7 +63,9 @@ module.exports = function override(config) {
 }
 ```
 
-#### Additional configurations *jsconfig.json* | *tsconfig.json*
+#### Config paths from *jsconfig.json* | *tsconfig.json*
+
+Config files for aliases mentioned in example above looks like:
 
 ```json
 {
@@ -64,5 +76,26 @@ module.exports = function override(config) {
       "@library/*": "library/src/*",
     }
   }
+}
+```
+
+So to keep aliases in one place load function `configPaths()` is provided.
+This function loads paths from *jsconfig.json* | *tsconfig.json* with
+slight adaptation. Splitting of loading paths from config and from stage of
+apply aliases allows filter some config paths or spread some additional paths
+
+```js
+const {alias, configPaths} = require('react-app-rewire-alias')
+
+module.exports = function override(config) {
+
+  alias(configPaths())(config)
+
+  // or with spread and custom config file
+  alias({
+    ...configPaths('tsconfig.paths.json')
+  })(config)
+
+  return config
 }
 ```
