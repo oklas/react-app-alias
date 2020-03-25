@@ -99,3 +99,25 @@ module.exports = function override(config) {
   return config
 }
 ```
+
+#### Short intro into rewire
+
+If you are new with rewire take a look its [docs](https://github.com/timarney/react-app-rewired#readme)
+Integration of rewire to the project is very simple. Create mentioned above
+**config-overrides.js** in the project root directory (near to *package.json* and *src* dir).
+And rewrite **package.json** like this:
+
+```diff
+  "scripts": {
+-   "start": "react-scripts start",
++   "start": "react-app-rewired start",
+-   "build": "react-scripts build",
++   "build": "react-app-rewired build",
+-   "test": "react-scripts test --env=jsdom",
++   "test": "react-app-rewired test --env=jsdom",
+    "eject": "react-scripts eject"
+}
+```
+
+That is all. Now you can continue to use `yarn` or `npm` start/build/test commands but
+already with rewired app.
