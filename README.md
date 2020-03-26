@@ -1,11 +1,13 @@
 # Alias solution for rewired create-react-app
 
-Currently `create-react-app` do not support more then one `src` dir in root
-directory. Monorepo, multirepo and library projects with examples etc,
-requires more then only one directories like `src`
+This is more than simple alias. This is also multiple project `src`
+directory. Currently `create-react-app` does not support more then one
+`src` dir in root directory. Monorepo, multirepo, library projects with
+examples and etc, requires more then only one directories like `src`.
 
-This is only alias for `create-react-app` and this is not replacement for
-mutipackage management tools like [lerna](https://github.com/lerna/lerna)
+This is alias and multy-src directory for `create-react-app` and this is not
+a replacement for mutipackage management tools like
+[lerna](https://github.com/lerna/lerna).
 
 [![Npm package](https://img.shields.io/npm/v/react-app-rewire-alias.svg?style=flat)](https://npmjs.com/package/react-app-rewire-alias)
 
@@ -19,19 +21,19 @@ mutipackage management tools like [lerna](https://github.com/lerna/lerna)
 
 * monorepos projects
 * multirepos projects
-* library projects with react examples
+* library projects with examples
 
 Read more about **[rewire](https://github.com/timarney/react-app-rewired)**:
 create-react-app webpack config without ejecting
 
 #### Advantages opposite another solutions:
 
- * provided aliases fully functional and allows to use babel and jsx and
-   so on in dirs near to src (outside of it)
+ * provided fully functional aliases and allows to use babel and jsx and
+   so on in dirs near to `src` (outside of `src`)
 
- * provided aliases fully secure and uses same scope plugin from original
-   create-react-app package for modules (instead of remove it), to minmize
-   probability to include something what is not wanted for bundle
+ * provided fully secure aliases and uses same module scope plugin from
+   original create-react-app package for modules (instead of remove it),
+   to minmize probability to include something what is not wanted for bundle
 
 #### Install
 
@@ -102,10 +104,10 @@ module.exports = function override(config) {
 
 #### Short intro into rewire
 
-If you are new with rewire take a look its [docs](https://github.com/timarney/react-app-rewired#readme)
-Integration of rewire to the project is very simple. Create mentioned above
-**config-overrides.js** in the project root directory (near to *package.json* and *src* dir).
-And rewrite **package.json** like this:
+Integration of rewire into the project is very simple (check
+[docs](https://github.com/timarney/react-app-rewired#readme) if you are new).
+Just create mentioned above **config-overrides.js** in the project root directory
+(near to *package.json* and *src* dir). And rewrite **package.json** like this:
 
 ```diff
   "scripts": {
