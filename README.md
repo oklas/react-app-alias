@@ -123,3 +123,38 @@ Just create mentioned above **config-overrides.js** in the project root director
 
 That is all. Now you can continue to use `yarn` or `npm` start/build/test commands but
 already with rewired app.
+
+#### Workaround for aliased imports not supported
+
+Create-react-app [overwrites](https://github.com/facebook/create-react-app/blob/v3.4.1/packages/react-scripts/scripts/utils/verifyTypeScriptSetup.js#L242)
+your `tsconfig.json` on the fly in runtime. It removes `paths` from `tsconfig.json` due
+to `aliased imports is not supported` with message:
+
+> ```
+> The following changes are being made to your tsconfig.json file: 
+>   - compilerOptions.paths must not be set (aliased imports are not supported)
+> ```
+
+The [suggested](https://github.com/facebook/create-react-app/issues/5645#issuecomment-435201019)
+workaround solution is to move configuration in a different `.json` file like this:
+
+```json
+/* tsconfig.paths.json */
+{
+  "compilerOptions": {
+    "paths": {
+      "example/*": "example/src/*",
+      "@library/*": "library/src/*",
+    }
+  }
+}
+```
+
+with subsequent inclusion using the `extends` features of `tsconfig.json`:
+
+```json
+/* tsconfig.json */
+{
+  "extends": "./tsconfig.paths.json"
+}
+```
