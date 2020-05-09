@@ -39,7 +39,7 @@ create-react-app webpack config without ejecting
  * provided fully secure aliases and uses same module scope plugin from
    original create-react-app package for modules (instead of remove it),
    to minmize probability to include something what is not wanted for bundle
-
+   
 #### Install
 
 ```sh
@@ -69,6 +69,9 @@ module.exports = function override(config) {
   return config
 }
 ```
+
+This is compatible with [customize-cra](https://github.com/arackaf/customize-cra),
+just insert into override chain.
 
 #### Config paths from *jsconfig.json* | *tsconfig.json*
 
