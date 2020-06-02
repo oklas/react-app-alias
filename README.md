@@ -152,7 +152,7 @@ which is not officially supported with this message:
 >   - compilerOptions.paths must not be set (aliased imports are not supported)
 > ```
 
-The [suggested workaround](https://github.com/oklas/react-app-rewire-alias/issues/3#issuecomment-633947385)
+The [suggested workaround](https://github.com/facebook/create-react-app/issues/5645#issuecomment-435201019)
 is to move the configuration to a different `.json` file, e.g. `tsconfig.paths.json`, like this:
 
 ```json
