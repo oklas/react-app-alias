@@ -7,12 +7,12 @@ function expandResolveAlias(resolve, alias) {
   resolve.alias = Object.assign(resolve.alias || {}, alias)
 }
 
-function expandRulesInclude(rules, include) {
+function expandRulesInclude(rules, include, ignoreForEslint) {
   rules.forEach(function (rule) {
-    if (rule.include === paths.appSrc)
+    if (rule.include === paths.appSrc && !ignoreForEslint)
       rule.include = include.concat(rule.include)
     if (rule.oneOf)
-      expandRulesInclude(rule.oneOf, include)
+      expandRulesInclude(rule.oneOf, include, false)
   })
 }
 
@@ -38,14 +38,14 @@ function expandPluginsScope(plugins, dirs, files) {
   }
 }
 
-function alias(aliasMap) {
+function alias(aliasMap, ignoreForEslint = false) {
   const aliasLocal = Object.keys(aliasMap).reduce((a, i) => {
     a[i] = path.resolve(paths.appPath, aliasMap[i])
     return a
   }, {})
   return function (config) {
     expandResolveAlias(config.resolve, aliasLocal)
-    expandRulesInclude(config.module.rules, Object.values(aliasLocal))
+    expandRulesInclude(config.module.rules, Object.values(aliasLocal), ignoreForEslint)
     expandPluginsScope(config.resolve.plugins, Object.values(aliasLocal))
     return config
   }
