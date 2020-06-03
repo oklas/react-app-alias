@@ -84,4 +84,7 @@ function configPaths(configPath = '') {
 module.exports = {
   alias,
   configPaths,
+  expandResolveAlias,
+  expandRulesInclude,
+  expandPluginsScope,
 }
