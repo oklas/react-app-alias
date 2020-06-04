@@ -6,7 +6,7 @@ const eslintLoaderModule = require.resolve('eslint-loader')
 
 function isRuleOfEslint(rule) {
   if(eslintLoaderModule === rule.loader) return true
-  if(rule.use && 0 < rule.use.filter(isRuleOfEslint)) return true
+  if(rule.use && 0 < rule.use.filter(isRuleOfEslint).length) return true
   return false
 }
 
