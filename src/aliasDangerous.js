@@ -5,9 +5,8 @@ const {expandResolveAlias, expandPluginsScope} = require('./index')
 const eslintLoaderModule = require.resolve('eslint-loader')
 
 function isRuleOfEslint(rule) {
-  if(eslintLoaderModule === rule.loader) return true
-  if(rule.use && 0 < rule.use.filter(isRuleOfEslint)) return true
-  return false
+  if (eslintLoaderModule === rule.loader) return true
+  return rule.use && 0 < rule.use.filter(isRuleOfEslint).length
 }
 
 function isLocalPath(parent) {
