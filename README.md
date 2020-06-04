@@ -166,3 +166,29 @@ with subsequent inclusion using the `extends` features of `tsconfig.json`:
   "extends": "./tsconfig.paths.json"
 }
 ```
+### Fix for parsing errors on external TypeScript sources
+
+When using TypeScript sources located outside the root project's directory,
+parsing errors may occur when building the project. This is caused by CRA's ESLint configuration
+for TypeScript files, which uses `overrides`. `overrides` does not support external sources,
+but excluding TypeScript sources means that they are incorrectly recognized as JavaScript files.
+
+A [possible fix](https://github.com/oklas/react-app-rewire-alias/issues/3#issuecomment-633947385)
+is disabling ESLint checking for these files. This can be activated by using the `aliasDangerous`
+function instead of `alias`. Extending the above workaround, this would look like this:
+
+```js
+const {configPaths} = require('react-app-rewire-alias')
+const {aliasDangerous} = require('react-app-rewire-alias/lib/aliasDangerous')
+
+module.exports = function override(config) {
+    aliasDangerous({
+        ...configPaths('tsconfig.paths.json')
+    })(config)
+    
+    return config
+}
+```
+
+Because ESLint caches parsed files, the incorrect configuration might have caused cache pollution.
+To solve this, delete the `node_modules/.cache` directory and restart your build.
