@@ -1,13 +1,17 @@
 # Alias solution for rewired create-react-app
 
-This is more than simple alias. This is also multiple project `src`
-directory. Currently `create-react-app` does not support more then one
-`src` dir in root directory. Monorepo, multirepo, library projects with
-examples and etc, requires more then only one directories like `src`.
+This is more than simple alias. This is also a multi-project `src`
+directory. Currently, `create-react-app` (CRA) does not support more than one
+`src` directory in the project. Monorepo, multi-repo and library projects with
+examples require more than one directories like `src`.
 
-This is alias and multy-src directory for `create-react-app` and this is not
-a replacement for mutipackage management tools like
-[lerna](https://github.com/lerna/lerna).
+This is merely an alias and multi-source solution for CRA
+and this is not a replacement for multi-package management tools like
+[Lerna](https://github.com/lerna/lerna).
+
+This project requires the use of **[react-app-rewired](https://github.com/timarney/react-app-rewired)**,
+which allows to overwrite the Webpack configuration
+of CRA projects without ejecting them.
 
 [![Npm package](https://img.shields.io/npm/v/react-app-rewire-alias.svg?style=flat)](https://npmjs.com/package/react-app-rewire-alias)
 [![Npm downloads](https://img.shields.io/npm/dm/react-app-rewire-alias.svg?style=flat)](https://npmjs.com/package/react-app-rewire-alias)
@@ -15,32 +19,28 @@ a replacement for mutipackage management tools like
 [![Dependency Status](https://img.shields.io/github/stars/oklas/react-app-rewire-alias.svg?style=social&label=Star)](https://github.com/oklas/react-app-rewire-alias)
 [![Dependency Status](https://img.shields.io/twitter/follow/oklaspec.svg?style=social&label=Follow)](https://twitter.com/oklaspec)
 
-
 #### This allows:
 
-* quality and secure exports outside from `src` (identically `src`)
+* quality and secure exports from outside `src`
 * absolute imports
-* any `./dir` at root outside of `src` with babel and etc cra features
+* any `./directory` at root outside of `src` with Babel and CRA features
 
 #### This is designed for:
 
-* monorepos projects
-* multirepos projects
+* monorepo projects
+* multi-repo projects
 * library projects with examples
 
-Read more about **[rewire](https://github.com/timarney/react-app-rewired)**:
-create-react-app webpack config without ejecting
+#### Advantages over other solutions:
 
-#### Advantages opposite another solutions:
+ * provided fully functional aliases and allows the use of Babel, JSX, etc.
+   outside of `src`
 
- * provided fully functional aliases and allows to use babel and jsx and
-   so on in dirs near to `src` (outside of `src`)
-
- * provided fully secure aliases and uses same module scope plugin from
-   original create-react-app package for modules (instead of remove it),
-   to minmize probability to include something what is not wanted for bundle
+ * provided fully secure aliases and uses the same module scope plugin from
+   the original create-react-app package for modules (instead of removing it),
+   to minimize the probability of including unwanted code
    
-#### Install
+#### Installation
 
 ```sh
 yarn add --dev react-app-rewired react-app-rewire-alias
@@ -60,7 +60,6 @@ Modify **config-overrides.js** like this:
 const {alias} = require('react-app-rewire-alias')
 
 module.exports = function override(config) {
-
   alias({
     example: 'example/src',
     '@library': 'library/src',
@@ -71,37 +70,46 @@ module.exports = function override(config) {
 ```
 
 This is compatible with [customize-cra](https://github.com/arackaf/customize-cra),
-just insert into override chain.
+just insert it into the override chain.
 
-#### Config paths from *jsconfig.json* | *tsconfig.json*
+#### Using config paths from *jsconfig.json* or *tsconfig.json*
 
-Config files for aliases mentioned in example above looks like:
+You can also configure your paths in your `jsconfig.json` or `tsconfig.json` like this:
 
 ```json
 {
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "example/*": "example/src/*",
-      "@library/*": "library/src/*",
+      "example/*": ["example/src/*"],
+      "@library/*": ["library/src/*"]
     }
   }
 }
 ```
 
-So to keep aliases in one place load function `configPaths()` is provided.
-This function loads paths from *jsconfig.json* | *tsconfig.json* with
-slight adaptation. Splitting of loading paths from config and from stage of
-apply aliases allows filter some config paths or spread some additional paths
+To keep aliases in one place, the provided `configPaths()` function
+loads the paths from `jsconfig.json` or `tsconfig.json` with slight adaptations.
+Use it like this:
 
 ```js
 const {alias, configPaths} = require('react-app-rewire-alias')
 
 module.exports = function override(config) {
-
   alias(configPaths())(config)
 
-  // or with spread and custom config file
+  return config
+}
+```
+
+The `tsconfig.json` is prioritized over the `jsconfig.json` in this scenario.
+
+If you placed the paths in a custom file, use the function like so instead:
+
+```js
+const {alias, configPaths} = require('react-app-rewire-alias')
+
+module.exports = function override(config) {
   alias({
     ...configPaths('tsconfig.paths.json')
   })(config)
@@ -110,12 +118,13 @@ module.exports = function override(config) {
 }
 ```
 
-#### Short intro into rewire
+#### Using react-app-rewired
 
-Integration of rewire into the project is very simple (check
-[docs](https://github.com/timarney/react-app-rewired#readme) if you are new).
-Just create mentioned above **config-overrides.js** in the project root directory
-(near to *package.json* and *src* dir). And rewrite **package.json** like this:
+Integrating `react-app-rewired` into your project is very simple
+(see [its documentation](https://github.com/timarney/react-app-rewired#readme)):
+Create `config-overrides.js` mentioned above in the project's root directory
+(the same including the `package.json` and `src` directory)
+and rewrite the `package.json` like this:
 
 ```diff
   "scripts": {
@@ -123,42 +132,42 @@ Just create mentioned above **config-overrides.js** in the project root director
 +   "start": "react-app-rewired start",
 -   "build": "react-scripts build",
 +   "build": "react-app-rewired build",
--   "test": "react-scripts test --env=jsdom",
-+   "test": "react-app-rewired test --env=jsdom",
+-   "test": "react-scripts test",
++   "test": "react-app-rewired test",
     "eject": "react-scripts eject"
 }
 ```
 
-That is all. Now you can continue to use `yarn` or `npm` start/build/test commands but
-already with rewired app.
+That is all. Now you can continue to use `yarn` or `npm` start/build/test commands as usual.
 
-#### Workaround for aliased imports not supported
+#### Workaround for "aliased imports are not supported"
 
-Create-react-app [overwrites](https://github.com/facebook/create-react-app/blob/v3.4.1/packages/react-scripts/scripts/utils/verifyTypeScriptSetup.js#L242)
-your `tsconfig.json` on the fly in runtime. It removes `paths` from `tsconfig.json` due
-to `aliased imports is not supported` with message:
+CRA [overwrites](/blob/v3.4.1/packages/react-scripts/scripts/utils/verifyTypeScriptSetup.js#L242)
+your `tsconfig.json` at runtime and removes `paths` from the `tsconfig.json`,
+which is not officially supported, with this message:
 
 > ```
 > The following changes are being made to your tsconfig.json file: 
 >   - compilerOptions.paths must not be set (aliased imports are not supported)
 > ```
 
-The [suggested](https://github.com/facebook/create-react-app/issues/5645#issuecomment-435201019)
-workaround solution is to move configuration in a different `.json` file like this:
+The [suggested workaround](https://github.com/facebook/create-react-app/issues/5645#issuecomment-435201019)
+is to move the paths to a different `.json` file, e.g. `tsconfig.paths.json`, like this:
 
 ```json
 /* tsconfig.paths.json */
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "paths": {
-      "example/*": "example/src/*",
-      "@library/*": "library/src/*",
+      "example/*": ["example/src/*"],
+      "@library/*": ["library/src/*"]
     }
   }
 }
 ```
 
-with subsequent inclusion using the `extends` features of `tsconfig.json`:
+with that file's subsequent inclusion in the `tsconfig.json` using `extends`:
 
 ```json
 /* tsconfig.json */
