@@ -175,3 +175,26 @@ with that file's subsequent inclusion in the `tsconfig.json` using `extends`:
   "extends": "./tsconfig.paths.json"
 }
 ```
+
+## Tips
+
+* keep only one `node_modules` directory
+
+When using this (or some other) integration solution to join mulitiproject system in one
+application it is possible to meet strange unclear errors or problems with workning or
+building and starting the application. There is no possible to define criteia about
+what is the error - unpredictable strange errors. For example `<Route>` component from
+`react-router` do not see that it under subtree of `<Router>` and it falls with:
+
+> should not use Route or withRouter() outside a Router
+
+This may be a result of some confusions in node_modules for multirepo projects. This
+problem may appears also in plain `create-react-app` if one or more additional
+`node_modulest` directory appers in `src`.
+
+The simplest way to avoid problems is to keep only one `node_modules` folder for all
+projects integrated together in one application. Otherwise some subproject can use different
+versions of same library (for example React or Router etc) which can be not compatible with
+each other in internal data structs (react contexts and so on) and that brings problems like
+this. Therefore to avoid this problem it need to **manage correct versions in all
+`node_modules`** or more simple just **keep only one `node_modules` directory**.
