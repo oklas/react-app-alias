@@ -178,6 +178,8 @@ with that file's subsequent inclusion in the `tsconfig.json` using `extends`:
 
 ## Tips
 
+* **keep same versions of all deps in all projects**
+
 * **avoid `node_modules` in `src` or any `alias` folder**
 
 Confusions in deps versions may bring unclear errors or problems. For example application
