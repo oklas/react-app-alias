@@ -178,23 +178,27 @@ with that file's subsequent inclusion in the `tsconfig.json` using `extends`:
 
 ## Tips
 
-* keep only one `node_modules` directory
+* **avoid `node_modules` in `src` or any `alias` folder**
 
-When using this (or some other) integration solution to join mulitiproject system in one
-application it is possible to meet strange unclear errors or problems with workning or
-building and starting the application. There is no possible to define criteia about
-what is the error - unpredictable strange errors. For example `<Route>` component from
-`react-router` do not see that it under subtree of `<Router>` and it falls with:
+Confusions in deps versions may bring unclear errors or problems. For example application
+is not working without any error. Or another example is error in `react-router` - `<Route>`
+component do not see `<Router>` when actually code is correct and it falls with:
 
 > should not use Route or withRouter() outside a Router
 
-This may be a result of some confusions in node_modules for multirepo projects. This
-problem may appears also in plain `create-react-app` if one or more additional
-`node_modulest` directory appers in `src`.
+This may be a result of some confusions in node_modules folders of multirepo projects.
+Same take place in plain `create-react-app` if some how one or more additional
+`node_modulest` directory appers in `src`. 
 
-The simplest way to avoid problems is to keep only one `node_modules` folder for all
-projects integrated together in one application. Otherwise some subproject can use different
-versions of same library (for example React or Router etc) which can be not compatible with
-each other in internal data structs (react contexts and so on) and that brings problems like
-this. Therefore to avoid this problem it need to **manage correct versions in all
-`node_modules`** or more simple just **keep only one `node_modules` directory**.
+To avoid this problems **use only one main project `node_modules` directory**.
+Or **keep same versions of all deps in `node_modules`**.
+
+* **keep away from work with nested project**
+
+Using deps managers (as `npm` or `yarn`) with nested projects is impossible. The deps
+manager search top level `package.json` and its `node_modules` and bundler may mix deps
+from `node_modules` from different projects (top project and nested project) so this may
+bring mentioned above confusions with deps versions. To avoid problems: 
+**do not work with nested project directly when it is nested in another one - but only as
+toplevel**
+or **keep same versions of all deps in `node_modules`**
