@@ -178,9 +178,7 @@ with that file's subsequent inclusion in the `tsconfig.json` using `extends`:
 
 ## Tips
 
-* **keep same versions of all deps in all projects**
-
-* **avoid `node_modules` in `src` or any `alias` folder**
+* **keep only one `node_modules` directory** 
 
 Confusions in deps versions may bring unclear errors or problems. For example application
 is not working without any error. Or another example is error in `react-router` - `<Route>`
@@ -188,19 +186,26 @@ component do not see `<Router>` when actually code is correct and it falls with:
 
 > should not use Route or withRouter() outside a Router
 
-This may be a result of some confusions in node_modules folders of multirepo projects.
+This may be a result of some confusions in `node_modules` folders of multirepo projects.
 Same take place in plain `create-react-app` if some how one or more additional
 `node_modulest` directory appers in `src`. 
 
 To avoid this problems **use only one main project `node_modules` directory**.
-Or **keep same versions of all deps in `node_modules`**.
 
-* **keep away from work with nested project**
+* **keep away from working with nested project**
 
-Using deps managers (as `npm` or `yarn`) with nested projects is impossible. The deps
-manager search top level `package.json` and its `node_modules` and bundler may mix deps
-from `node_modules` from different projects (top project and nested project) so this may
+Default bundler configuration doesn't assume your configuration and may mix deps from
+`node_modules` from different projects (top project and nested project) so this may
 bring mentioned above confusions with deps versions. To avoid problems: 
-**do not work with nested project directly when it is nested in another one - but only as
-toplevel**
-or **keep same versions of all deps in `node_modules`**
+**do not install and run within nested project directly when it is nested or integrated
+in another one - but only independent toplevel configuration** Or consider to eject
+or configure webpack manually.
+
+* **do not relay to deps versions synchronization**
+
+Some libraryes uses `instanceof` and other type comparisions. For example two objects
+created with same params in same code of same library version but installed in
+differenent `node_modules` and bundled separately - will mostly have same data and same
+behaviour but differen instance type. Such libraries will be unable to recognize its own
+objects and will lead to unpredictable behaviour. So **use only one main project
+`node_modules` directory**.
