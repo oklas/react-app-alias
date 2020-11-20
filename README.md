@@ -54,6 +54,12 @@ npm install --save-dev react-app-rewired react-app-rewire-alias
 
 #### Usage
 
+Current `create-react-app` and `react-scripts` **v4.0** has a bug which is fixed here:
+[create-react-app #9921](https://github.com/facebook/create-react-app/pull/9921) - but
+it does released yet. Use previous version of create-react-app/react-scripts or
+wait for new release or check commit referenced in #9 to learn how make it worked
+using patch-package. 
+
 Place for alias foldes is recommended near to **src**.
 Alias folders outside of the root of project is not recommended.
 
@@ -61,8 +67,6 @@ Alias folders outside of the root of project is not recommended.
 * modify **config-overrides.js** to add `react-app-rewire-alias`
 * add **extends** section to `jsconfig.json` or `tsconfig.json`
 * configure alias in `jsconfig.paths.json` or `tsconfig.paths.json`
-
-#### Modify config-overrides.js to add `react-app-rewire-alias`
 
 ```js
 const {alias, configPaths} = require('react-app-rewire-alias')
