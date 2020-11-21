@@ -40,7 +40,7 @@ function aliasDangerous(aliasMap) {
   return function(config) {
     expandResolveAlias(config.resolve, aliasLocal)
     expandRulesInclude(config.module.rules, Object.values(aliasLocal))
-    expandPluginsScope(config.resolve.plugins, Object.values(aliasLocal))
+    expandPluginsScope(config.resolve.plugins, Object.values(aliasLocal), Object.values(aliasLocal))
     return config
   }
 }
