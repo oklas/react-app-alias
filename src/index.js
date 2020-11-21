@@ -66,9 +66,12 @@ function configPaths(configPath = '') {
     throw Error('react-app-rewire-alias:configPaths: there is no config file found')
 
   const conf = require(confPath)
+  const extmsg = !conf.extends ? '' : `, specify ${conf.extends} instead of ${confPath} for configPaths()`
+    
 
   if(typeof conf.compilerOptions.paths !== 'object' )
-    throw Error('react-app-rewire-alias:configPaths: array expected for paths')
+    throw Error(`
+      react-app-rewire-alias:configPaths: array expected for paths${extmsg}`)
 
   if(!conf.compilerOptions || !conf.compilerOptions.paths)
     return {}
