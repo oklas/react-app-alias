@@ -1,13 +1,16 @@
-import React from 'react';
-import logo from './logo.svg';
+import React from 'react'
+//import AboveRootTs from 'above-root-ts/AboveRootTs'
+import AboveRootJs from 'above-root-js/AboveRootJs'
+import NearSrc from 'near-src/NearSrc'
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-      </header>
+      <h2>Main</h2>
+      <NearSrc />
+      {/*<AboveRootTs />*/}
+      <AboveRootJs />
     </div>
   );
 }
