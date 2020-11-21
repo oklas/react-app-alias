@@ -54,16 +54,21 @@ npm install --save-dev react-app-rewired react-app-rewire-alias
 
 #### Usage
 
-Modify **config-overrides.js** like this:
+Place for alias foldes is recommended near to **src**.
+Alias folders outside of the root of project is not recommended.
+
+* configure `create-app-rewired` if not yet (short brief below)
+* modify **config-overrides.js** to add `react-app-rewire-alias`
+* add **extends** section to `jsconfig.json` or `tsconfig.json`
+* configure alias in `jsconfig.paths.json` or `tsconfig.paths.json`
+
+#### Modify config-overrides.js to add `react-app-rewire-alias`
 
 ```js
-const {alias} = require('react-app-rewire-alias')
+const {alias, configPaths} = require('react-app-rewire-alias')
 
 module.exports = function override(config) {
-  alias({
-    example: 'example/src',
-    '@library': 'library/src',
-  })(config)
+  alias(configPaths('./tsconfig.paths.json'))(config)
 
   return config
 }
@@ -72,11 +77,29 @@ module.exports = function override(config) {
 This is compatible with [customize-cra](https://github.com/arackaf/customize-cra),
 just insert it into the override chain.
 
-#### Using config paths from *jsconfig.json* or *tsconfig.json*
+#### Add **extends** section to **jsconfig.json** or **tsconfig.json**
 
-You can also configure your paths in your `jsconfig.json` or `tsconfig.json` like this:
+The **paths** section must not be configured directly in `jsconfig.json` or `tsconfig.json`
+but in separated extends file.
 
-```json
+Specify **extends** section
+
+```js
+// jsconfig.json or tsconfig.json
+{
+  "compilerOptions": {
+    // ...
+    "extends": "./tsconfig.paths.json", // or "./tsconfig.paths.json"
+  }
+}
+```
+
+#### Configure alias in **jsconfig.paths.json** or **tsconfig.paths.json**
+
+Create separated file `jsconfig.paths.json` or `tsconfig.paths.json`, like this:
+
+```js
+// jsconfig.paths.json or tsconfig.paths.json
 {
   "compilerOptions": {
     "baseUrl": ".",
@@ -85,36 +108,6 @@ You can also configure your paths in your `jsconfig.json` or `tsconfig.json` lik
       "@library/*": ["library/src/*"]
     }
   }
-}
-```
-
-To keep aliases in one place, the provided `configPaths()` function
-loads the paths from `jsconfig.json` or `tsconfig.json` with slight adaptations.
-Use it like this:
-
-```js
-const {alias, configPaths} = require('react-app-rewire-alias')
-
-module.exports = function override(config) {
-  alias(configPaths())(config)
-
-  return config
-}
-```
-
-The `tsconfig.json` is prioritized over the `jsconfig.json` in this scenario.
-
-If you placed the paths in a custom file, use the function like so instead:
-
-```js
-const {alias, configPaths} = require('react-app-rewire-alias')
-
-module.exports = function override(config) {
-  alias({
-    ...configPaths('tsconfig.paths.json')
-  })(config)
-
-  return config
 }
 ```
 
@@ -139,6 +132,29 @@ and rewrite the `package.json` like this:
 ```
 
 That is all. Now you can continue to use `yarn` or `npm` start/build/test commands as usual.
+
+#### API
+
+* **alias()**
+
+The function `alias()` accepts aliases declared in form:
+
+```js
+{
+  example: 'example/src',
+  '@library': 'library/src',
+}
+```
+
+To make all things worked, aliases must be declared in `jsconfig.json` or `tsconfig.json`.
+However it must beclared in separated extends file (see section `Workaround for
+"aliased imports are not supported"` below)
+
+* **configPaths()**
+
+The function `configPaths()` loads paths from file compatible with `jsconfig.json`
+or `tsconfig.json` and returns path in form acceptable for `alias()` function.
+The `tsconfig.json` is prioritized over the `jsconfig.json` in loading sequence.
 
 #### Workaround for "aliased imports are not supported"
 
