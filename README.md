@@ -10,7 +10,8 @@ and this is not a replacement for multi-package management tools like
 [Lerna](https://github.com/lerna/lerna).
 
 This project requires the use of **[react-app-rewired](https://github.com/timarney/react-app-rewired)**,
-which allows to overwrite the Webpack configuration
+(and may be used with **[customize-cra](https://github.com/arackaf/customize-cra)**).
+Which allows to overwrite the Webpack configuration
 of CRA projects without ejecting them.
 
 [![Npm package](https://img.shields.io/npm/v/react-app-rewire-alias.svg?style=flat)](https://npmjs.com/package/react-app-rewire-alias)
@@ -63,10 +64,31 @@ using patch-package.
 Place for alias foldes is recommended near to **src**.
 Alias folders outside of the root of project is not recommended.
 
+There two approach to configure: `simple` - only with js projects.
+Another is `with ts/js config` - for both js and typescript projects.
+
+The simple way is just configure `create-app-rewired` (see below or its docs)
+and create **config-overrides.js** like this:
+
+```js
+const {alias} = require('react-app-rewire-alias')
+
+module.exports = function override(config) {
+  return alias({
+    example: 'example/src',
+    '@library': 'library/src',
+  })(config)
+}
+```
+
+The approach `with ts/js config` includes these steps:
+
 * configure `create-app-rewired` if not yet (short brief below)
 * modify **config-overrides.js** to add `react-app-rewire-alias`
 * add **extends** section to `jsconfig.json` or `tsconfig.json`
 * configure alias in `jsconfig.paths.json` or `tsconfig.paths.json`
+
+#### Modify **config-overrides.js** to add `react-app-rewire-alias`
 
 ```js
 const {alias, configPaths} = require('react-app-rewire-alias')
@@ -77,9 +99,6 @@ module.exports = function override(config) {
   return config
 }
 ```
-
-This is compatible with [customize-cra](https://github.com/arackaf/customize-cra),
-just insert it into the override chain.
 
 #### Add **extends** section to **jsconfig.json** or **tsconfig.json**
 
