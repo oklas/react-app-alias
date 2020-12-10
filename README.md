@@ -9,10 +9,12 @@ This is merely an alias and multi-source solution for CRA
 and this is not a replacement for multi-package management tools like
 [Lerna](https://github.com/lerna/lerna).
 
-This project requires the use of **[react-app-rewired](https://github.com/timarney/react-app-rewired)**,
-(and may be used with **[customize-cra](https://github.com/arackaf/customize-cra)**).
-Which allows to overwrite the Webpack configuration
-of CRA projects without ejecting them.
+This overwrites the CRA webpack configuration in runtime
+without ejecting them and works with one of:
+* **[react-app-rewired](https://github.com/timarney/react-app-rewired)**
+* **[customize-cra](https://github.com/arackaf/customize-cra)** 
+* **[craco](https://github.com/gsoft-inc/craco)** (see [Using craco](#using-craco) below)
+
 
 [![Npm package](https://img.shields.io/npm/v/react-app-rewire-alias.svg?style=flat)](https://npmjs.com/package/react-app-rewire-alias)
 [![Npm downloads](https://img.shields.io/npm/dm/react-app-rewire-alias.svg?style=flat)](https://npmjs.com/package/react-app-rewire-alias)
@@ -155,6 +157,23 @@ and rewrite the `package.json` like this:
 ```
 
 That is all. Now you can continue to use `yarn` or `npm` start/build/test commands as usual.
+
+#### Using craco
+
+```js
+// craco.config.js
+
+const {CracoAliasPlugin, configPaths} = require('react-app-rewire-alias')
+
+module.exports = {
+  plugins: [
+    {
+      plugin: CracoAliasPlugin,
+      options: {alias: configPaths('./tsconfig.paths.json')}
+    }
+  ]
+}
+```
 
 #### API
 
