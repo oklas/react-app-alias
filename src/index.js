@@ -84,10 +84,17 @@ function configPaths(configPath = '') {
   }, {})
 }
 
+const CracoAliasPlugin = {
+  overrideWebpackConfig: function({webpackConfig, pluginOptions}) {
+    return alias(pluginOptions.alias||configPaths())(webpackConfig)
+  },
+}
+
 module.exports = {
   alias,
   configPaths,
   expandResolveAlias,
   expandRulesInclude,
   expandPluginsScope,
+  CracoAliasPlugin,
 }
