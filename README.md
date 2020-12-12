@@ -9,12 +9,11 @@ This is merely an alias and multi-source solution for CRA
 and this is not a replacement for multi-package management tools like
 [Lerna](https://github.com/lerna/lerna).
 
-This overwrites the CRA webpack configuration in runtime
-without ejecting them and works with one of:
+This requires to modify the CRA webpack configuration in runtime
+(without ejecting) and works with one of:
 * **[react-app-rewired](https://github.com/timarney/react-app-rewired)**
 * **[customize-cra](https://github.com/arackaf/customize-cra)** 
 * **[craco](https://github.com/gsoft-inc/craco)** (see [Using craco](#using-craco) below)
-
 
 [![Npm package](https://img.shields.io/npm/v/react-app-rewire-alias.svg?style=flat)](https://npmjs.com/package/react-app-rewire-alias)
 [![Npm downloads](https://img.shields.io/npm/dm/react-app-rewire-alias.svg?style=flat)](https://npmjs.com/package/react-app-rewire-alias)
