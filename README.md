@@ -82,7 +82,7 @@ module.exports = function override(config) {
 }
 ```
 
-The approach `with ts/js config` includes these steps:
+Using `with ts/js config` includes these steps:
 
 * configure `create-app-rewired` if not yet (short brief below)
 * modify **config-overrides.js** to add `react-app-rewire-alias`
@@ -176,7 +176,7 @@ module.exports = {
 
 #### API
 
-* **alias()**
+* **alias(aliasMap)(webpackConfig)**
 
 The function `alias()` accepts aliases declared in form:
 
@@ -190,6 +190,8 @@ The function `alias()` accepts aliases declared in form:
 To make all things worked, aliases must be declared in `jsconfig.json` or `tsconfig.json`.
 However it must beclared in separated extends file (see section `Workaround for
 "aliased imports are not supported"` below)
+
+The result is function which modify wepack config  
 
 * **configPaths()**
 
