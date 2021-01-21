@@ -14,7 +14,7 @@
     "patch-package": "^6.2.2",
     "postinstall-postinstall": "^2.1.0",
     "react": "^17.0.1",
-    "react-app-rewire-alias": "file:../../",
+    "react-app-rewire-alias": "file:../..",
     "react-app-rewired": "^2.1.6",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.0",
