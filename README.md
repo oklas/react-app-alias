@@ -36,7 +36,7 @@ This requires to modify the CRA webpack configuration in runtime
 #### Advantages over other solutions:
 
  * provided fully functional aliases and allows the use of Babel, JSX, etc.
-   outside of `src`
+   outside of `src` (outside of `root` see section below)
 
  * provided fully secure aliases and uses the same module scope plugin from
    the original create-react-app package for modules (instead of removing it),
@@ -174,6 +174,8 @@ module.exports = {
 }
 ```
 
+
+
 #### API
 
 * **alias(aliasMap)(webpackConfig)**
@@ -234,6 +236,37 @@ with that file's subsequent inclusion in the `tsconfig.json` using `extends`:
   "extends": "./tsconfig.paths.json"
 }
 ```
+
+## Outside of root
+
+The base alias implementation supports aliases near `src` and in `src` directory. It
+provides aliases with same feature set as original `create-react-app`. As far
+`create-react-app` does not supports aliases and additional `src`-like directories as
+it does not supports aliases outside of the `root` project directory.
+
+Aliases outside or project `root` directory may be implemented with some
+[limitation](https://github.com/oklas/react-app-rewire-alias/issues/3#issuecomment-633947385)
+of feature set. That is solved by disabling ESLint checking.
+
+This mplementation is moved to separated code set named `aliasDangerous` to be not confused
+with `alias`. To use it husr replace import like this:
+
+```diff
+- const {alias, configPaths, CracoAliasPlugin} = require('react-app-rewire-alias')
++ const {aliasDangerous, configPaths, CracoAliasPlugin} = require('react-app-rewire-alias/lib/aliasDangerous')
+```
+
+And replace `alias` with `aliasDangerous`:
+
+```js
+module.exports = function override(config) {
+  aliasDangerous({
+    ...configPaths('tsconfig.paths.json')
+  })(config)
+     
+  return config
+}
+ ```
 
 ## Tips
 
