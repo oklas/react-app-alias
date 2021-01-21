@@ -1,6 +1,11 @@
 const path = require('path')
 const paths = require('react-scripts/config/paths')
-const {expandResolveAlias, expandPluginsScope} = require('./index')
+const {
+  configPaths,
+  expandResolveAlias,
+  expandRulesInclude,
+  expandPluginsScope,
+} = require('./index')
 
 const eslintLoaderModule = require.resolve('eslint-loader')
 
@@ -45,6 +50,17 @@ function aliasDangerous(aliasMap) {
   }
 }
 
+const CracoAliasPlugin = {
+  overrideWebpackConfig: function({webpackConfig, pluginOptions}) {
+    return aliasDangerous(pluginOptions.alias||configPaths())(webpackConfig)
+  },
+}
+
 module.exports = {
   aliasDangerous,
+  configPaths,
+  expandResolveAlias,
+  expandRulesInclude,
+  expandPluginsScope,
+  CracoAliasPlugin,
 }
