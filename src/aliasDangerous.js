@@ -3,7 +3,6 @@ const paths = require('react-scripts/config/paths')
 const {
   configPaths,
   expandResolveAlias,
-  expandRulesInclude,
   expandPluginsScope,
 } = require('./index')
 
