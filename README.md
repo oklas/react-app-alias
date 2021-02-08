@@ -12,7 +12,7 @@ and this is not a replacement for multi-package management tools like
 This requires to modify the CRA webpack configuration in runtime
 (without ejecting) and works with one of:
 * **[react-app-rewired](https://github.com/timarney/react-app-rewired)**
-* **[customize-cra](https://github.com/arackaf/customize-cra)** 
+* **[customize-cra](https://github.com/arackaf/customize-cra)**
 * **[craco](https://github.com/gsoft-inc/craco)** (see [Using craco](#using-craco) below)
 
 [![Npm package](https://img.shields.io/npm/v/react-app-rewire-alias.svg?style=flat)](https://npmjs.com/package/react-app-rewire-alias)
@@ -41,7 +41,7 @@ This requires to modify the CRA webpack configuration in runtime
  * provided fully secure aliases and uses the same module scope plugin from
    the original create-react-app package for modules (instead of removing it),
    to minimize the probability of including unwanted code
-   
+
 #### Installation
 
 ```sh
@@ -60,7 +60,7 @@ Current `create-react-app` and `react-scripts` **v4.0** has a bug which is fixed
 [create-react-app #9921](https://github.com/facebook/create-react-app/pull/9921) - but
 it does released yet. Use previous version of create-react-app/react-scripts or
 wait for new release or check commit referenced in #9 to learn how make it worked
-using patch-package. 
+using patch-package.
 
 Place for alias foldes is recommended near to **src**.
 Alias folders outside of the root of project is not recommended.
@@ -111,9 +111,9 @@ Specify **extends** section
 ```js
 // jsconfig.json or tsconfig.json
 {
+  "extends": "./tsconfig.paths.json", // or "./tsconfig.paths.json"
   "compilerOptions": {
     // ...
-    "extends": "./tsconfig.paths.json", // or "./tsconfig.paths.json"
   }
 }
 ```
@@ -193,7 +193,7 @@ To make all things worked, aliases must be declared in `jsconfig.json` or `tscon
 However it must beclared in separated extends file (see section `Workaround for
 "aliased imports are not supported"` below)
 
-The result is function which modify wepack config  
+The result is function which modify wepack config
 
 * **configPaths()**
 
@@ -208,7 +208,7 @@ your `tsconfig.json` at runtime and removes `paths` from the `tsconfig.json`,
 which is not officially supported, with this message:
 
 > ```
-> The following changes are being made to your tsconfig.json file: 
+> The following changes are being made to your tsconfig.json file:
 >   - compilerOptions.paths must not be set (aliased imports are not supported)
 > ```
 
@@ -263,14 +263,14 @@ module.exports = function override(config) {
   aliasDangerous({
     ...configPaths('tsconfig.paths.json')
   })(config)
-     
+
   return config
 }
  ```
 
 ## Tips
 
-* **keep only one `node_modules` directory** 
+* **keep only one `node_modules` directory**
 
 Confusions in deps versions may bring unclear errors or problems. For example application
 is not working without any error. Or another example is error in `react-router` - `<Route>`
@@ -280,7 +280,7 @@ component do not see `<Router>` when actually code is correct and it falls with:
 
 This may be a result of some confusions in `node_modules` folders of multirepo projects.
 Same take place in plain `create-react-app` if some how one or more additional
-`node_modulest` directory appers in `src`. 
+`node_modulest` directory appers in `src`.
 
 To avoid this problems **use only one main project `node_modules` directory**.
 
@@ -288,7 +288,7 @@ To avoid this problems **use only one main project `node_modules` directory**.
 
 Default bundler configuration doesn't assume your configuration and may mix deps from
 `node_modules` from different projects (top project and nested project) so this may
-bring mentioned above confusions with deps versions. To avoid problems: 
+bring mentioned above confusions with deps versions. To avoid problems:
 **do not install and run within nested project directly when it is nested or integrated
 in another one - but only independent toplevel configuration** Or consider to eject
 or configure webpack manually.
