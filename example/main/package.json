@@ -11,8 +11,6 @@
     "@types/react": "^17.0.1",
     "@types/react-dom": "^17.0.0",
     "eslint-loader": "^4.0.2",
-    "patch-package": "^6.2.2",
-    "postinstall-postinstall": "^2.1.0",
     "react": "^17.0.1",
     "react-app-rewire-alias": "file:../..",
     "react-app-rewired": "^2.1.6",
@@ -22,7 +20,6 @@
     "web-vitals": "^1.1.0"
   },
   "scripts": {
-    "postinstall": "patch-package",
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test"
