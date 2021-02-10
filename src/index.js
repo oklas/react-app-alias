@@ -38,7 +38,25 @@ function expandPluginsScope(plugins, dirs, files) {
   }
 }
 
+function checkOutside(aliasMap) {
+  const outside = Object.keys(aliasMap).reduce( (a, i) => {
+    const rel = path.relative(paths.appPath, aliasMap[i])
+    const outside = rel.startsWith('..') || path.isAbsolute(rel)
+    if(outside) console.error(
+      `alias '${i}' is outside of root - supported only by aliasDangerous`
+    )
+    return a || outside
+  }, false)
+  if(outside) {
+    console.error(
+      `https://github.com/oklas/react-app-rewire-alias#outside-of-root`
+    )
+    process.exit(-1)
+  }
+}
+
 function alias(aliasMap) {
+  checkOutside(aliasMap)
   const aliasLocal = Object.keys(aliasMap).reduce( (a,i) => {
     a[i] = path.resolve(paths.appPath, aliasMap[i])
     return a
