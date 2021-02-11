@@ -72,14 +72,15 @@ The simple way is just configure `create-app-rewired` (see below or its docs)
 and create **config-overrides.js** like this:
 
 ```js
-const {alias} = require('react-app-rewire-alias')
+const {alias, aliasJest} = require('react-app-rewire-alias')
 
-module.exports = function override(config) {
-  return alias({
-    example: 'example/src',
-    '@library': 'library/src',
-  })(config)
+const aliasMap = {
+  example: 'example/src',
+  '@library': 'library/src',
 }
+
+module.exports = alias(aliasMap)
+module.exports.jest = aliasJest(aliasMap)
 ```
 
 Using `with ts/js config` includes these steps:
@@ -92,13 +93,12 @@ Using `with ts/js config` includes these steps:
 #### Modify **config-overrides.js** to add `react-app-rewire-alias`
 
 ```js
-const {alias, configPaths} = require('react-app-rewire-alias')
+const {alias, aliasJest, configPaths} = require('react-app-rewire-alias')
 
-module.exports = function override(config) {
-  alias(configPaths('./tsconfig.paths.json'))(config)
+const aliasMap = configPaths('./tsconfig.paths.json')
 
-  return config
-}
+module.exports = alias(aliasMap)
+module.exports.jest = aliasJest(aliasMap)
 ```
 
 #### Add **extends** section to **jsconfig.json** or **tsconfig.json**
@@ -200,6 +200,24 @@ The result is function which modify wepack config
 The function `configPaths()` loads paths from file compatible with `jsconfig.json`
 or `tsconfig.json` and returns path in form acceptable for `alias()` function.
 The `tsconfig.json` is prioritized over the `jsconfig.json` in loading sequence.
+
+* **extendability**
+
+As any `react-app-rewire` or `customize-cra` rewire extension this can be integrated
+with another:
+
+```js
+module.exports = function override(config) {
+  const modifiedConfig = alias(...)(config)
+  ...
+  return someElse(modifiedConfig)
+}
+module.exports.jest = function override(config) {
+  const modifiedConfig = aliasJest(...)(config)
+  ...
+  return modifiedConfig
+}
+```
 
 #### Workaround for "aliased imports are not supported"
 
