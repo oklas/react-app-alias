@@ -1,6 +1,7 @@
 const path = require('path')
 const paths = require('react-scripts/config/paths')
 const {
+  aliasJest,
   configPaths,
   expandResolveAlias,
   expandPluginsScope,
@@ -57,6 +58,7 @@ const CracoAliasPlugin = {
 
 module.exports = {
   aliasDangerous,
+  aliasJest,
   configPaths,
   expandResolveAlias,
   expandRulesInclude,

@@ -38,14 +38,20 @@ function expandPluginsScope(plugins, dirs, files) {
   }
 }
 
+function isOutsideOfRoot(targ) {
+  const rel = path.relative(paths.appPath, targ)
+  return rel.startsWith('..') || path.isAbsolute(rel)
+}
+
 function checkOutside(aliasMap) {
   const outside = Object.keys(aliasMap).reduce( (a, i) => {
-    const rel = path.relative(paths.appPath, aliasMap[i])
-    const outside = rel.startsWith('..') || path.isAbsolute(rel)
-    if(outside) console.error(
-      `alias '${i}' is outside of root - supported only by aliasDangerous`
-    )
-    return a || outside
+    if(isOutsideOfRoot(aliasMap[i])) {
+      console.error(
+        `alias '${i}' is outside of root - supported only by aliasDangerous`
+      )
+      return true
+    }
+    return a
   }, false)
   if(outside) {
     console.error(
@@ -69,6 +75,19 @@ function alias(aliasMap) {
   }
 }
 
+function aliasJest(aliasMap) {
+  const jestAliasMap = aliasMapForJest(aliasMap)
+  return function(config) {
+    return {
+      ...config,
+      moduleNameMapper: {
+        ...config.moduleNameMapper,
+        ...jestAliasMap,
+      }
+    }
+  }
+}
+
 function configPaths(configPath = '') {
   const confPath = (
     configPath.length > 0 && fs.existsSync(path.resolve(paths.appPath, configPath)) ?
@@ -85,7 +104,6 @@ function configPaths(configPath = '') {
 
   const conf = require(confPath)
   const extmsg = !conf.extends ? '' : `, specify ${conf.extends} instead of ${confPath} for configPaths()`
-    
 
   if(typeof conf.compilerOptions.paths !== 'object' )
     throw Error(`
@@ -102,14 +120,28 @@ function configPaths(configPath = '') {
   }, {})
 }
 
+function aliasMapForJest(aliasMap) {
+  return Object.keys(aliasMap).reduce( (a, i) => {
+    const outside = isOutsideOfRoot(aliasMap[i])
+    const restr = i.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    const alias = `^${restr}/(.*)$`
+    const targ = outside ? path.resolve(aliasMap[i])+'/$1' : `<rootDir>/${aliasMap[i]}/$1`
+    return { ...a, [alias]: targ }
+  }, {})
+}
+
 const CracoAliasPlugin = {
   overrideWebpackConfig: function({webpackConfig, pluginOptions}) {
     return alias(pluginOptions.alias||configPaths())(webpackConfig)
   },
+  overrideJestConfig: function({jestConfig}) {
+    return aliasJest(pluginOptions.alias||configPaths())(jestConfig)
+  }
 }
 
 module.exports = {
   alias,
+  aliasJest,
   configPaths,
   expandResolveAlias,
   expandRulesInclude,
