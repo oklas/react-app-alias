@@ -1,5 +1,9 @@
 # Demo
 
+This example demonstrate base `alias` implementation (without `above root` imports)
+
+*Configuration (with `above root`) imports is in `example/above` directory*
+
 Here is example for crete-react-app versions 4.1 and above
 
 The version 4.0 of create-react-app requires patch due to
