@@ -7,10 +7,17 @@ const {
   expandPluginsScope,
 } = require('./index')
 
-const eslintLoaderModule = require.resolve('eslint-loader')
+function requireEslintLoaderModule() {
+  try {
+    return require.resolve('eslint-loader')
+  } catch(e) {}
+  return undefined
+}
+
+const eslintLoaderModule = requireEslintLoaderModule()
 
 function isRuleOfEslint(rule) {
-  if (eslintLoaderModule === rule.loader) return true
+  if(eslintLoaderModule && eslintLoaderModule === rule.loader) return true
   return rule.use && 0 < rule.use.filter(isRuleOfEslint).length
 }
 
