@@ -61,6 +61,9 @@ const CracoAliasPlugin = {
   overrideWebpackConfig: function({webpackConfig, pluginOptions}) {
     return aliasDangerous(pluginOptions.alias||configPaths())(webpackConfig)
   },
+  overrideJestConfig: function({jestConfig}) {
+    return aliasJest(pluginOptions.alias||configPaths())(jestConfig)
+  }
 }
 
 module.exports = {
