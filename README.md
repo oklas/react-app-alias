@@ -152,7 +152,7 @@ and rewrite the `package.json` like this:
 -   "test": "react-scripts test",
 +   "test": "react-app-rewired test",
     "eject": "react-scripts eject"
-}
+  }
 ```
 
 That is all. Now you can continue to use `yarn` or `npm` start/build/test commands as usual.
@@ -172,6 +172,13 @@ module.exports = {
     }
   ]
 }
+```
+
+Or for dangerious mode (see *outside of root* section):
+
+```diff
+- const { CracoAliasPlugin, configPaths } = require('react-app-rewire-alias');
++ const { CracoAliasPlugin, configPaths } = require('react-app-rewire-alias/lib/aliasDangerous');
 ```
 
 
@@ -284,7 +291,7 @@ module.exports = function override(config) {
 
   return config
 }
- ```
+```
 
 ## Tips
 
