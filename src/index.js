@@ -134,7 +134,7 @@ const CracoAliasPlugin = {
   overrideWebpackConfig: function({webpackConfig, pluginOptions}) {
     return alias(pluginOptions.alias||configPaths())(webpackConfig)
   },
-  overrideJestConfig: function({jestConfig}) {
+  overrideJestConfig: function({jestConfig, pluginOptions}) {
     return aliasJest(pluginOptions.alias||configPaths())(jestConfig)
   }
 }
