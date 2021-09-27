@@ -2,7 +2,11 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "near-src/*": [ "near-src/src/*" ]
+      "near-src/*": [ "near-src/src/*" ],
+      "@core/*": ["src/core/*"],
+      "@components/*": ["src/components/*"],
+      "@hook/*": ["src/hook/*"],
+      "@models/*": ["src/models/*"]
     }
   }
 }
