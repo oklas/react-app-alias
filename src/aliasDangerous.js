@@ -1,7 +1,7 @@
 const path = require('path')
 const paths = require('react-scripts/config/paths')
 const {
-  aliasJest,
+  aliasJest: aliasJestSafe,
   configFilePath,
   configPathsRaw,
   configPaths,
@@ -98,6 +98,20 @@ function expandPluginsTsChecker(plugins, configPath) {
     }
     const options = {...opts, compilerOptions}
     plugins[pluginPos] = new Consructor(options)
+  }
+}
+
+function aliasJest(aliasMap) {
+  const aliasJestInstance = aliasJestSafe(aliasMap)
+  return function(config) {
+    const expanded = aliasJestInstance(config)
+    return {
+      ...expanded,
+      moduleDirectories: [
+        ...(config.moduleDirectories || []),
+        path.resolve(paths.appPath, 'node_modules')
+      ],
+    }
   }
 }
 
