@@ -2,6 +2,8 @@ const path = require('path')
 const paths = require('react-scripts/config/paths')
 const {
   aliasJest,
+  configFilePath,
+  configPathsRaw,
   configPaths,
   expandResolveAlias,
   expandPluginsScope,
@@ -44,6 +46,61 @@ function expandRulesInclude(rules, include) {
   })
 }
 
+function packageList() {
+  const packagePath = path.resolve(paths.appPath, 'package.json') 
+  const package = require(packagePath)
+  const depsSections = [
+    ...Object.keys(package).filter(s => s.match(/.*Dependencies/)),
+    'dependencies',
+  ]
+  const list = [].concat(...depsSections.map(s => Object.keys(package[s])))
+  return list
+}
+
+function packagePathsRaw() {
+  const packages = packageList();
+  const pathList = packages.reduce((a,i) => (
+    {
+      ...a,
+      [i]: [
+        path.resolve(paths.appPath, 'node_modules', i),
+        path.resolve(paths.appPath, 'node_modules', '@types', i),
+      ],
+      [`${i}/*`]: [
+        path.resolve(paths.appPath, 'node_modules', i) + '/*',
+        path.resolve(paths.appPath, 'node_modules', '@types', i) + "/*",
+      ],
+    }
+  ), {})
+  return pathList
+}
+
+function expandPluginsTsChecker(plugins, configPath) {
+  const pluginName = 'ForkTsCheckerWebpackPlugin'
+  const confPath = configFilePath(configPath)
+  const tsjsPaths = configPathsRaw(confPath)
+  const packagePaths = packagePathsRaw(confPath)
+  const pluginPos = plugins
+    .map(x => x.constructor.name)
+    .indexOf(pluginName)
+  if(pluginPos !== -1) {
+    const opts = plugins[pluginPos].options
+    const Consructor = plugins[pluginPos].constructor
+    plugins.splice(pluginPos, 1)
+    const paths = {
+      ...packagePaths,
+      ...((opts.compilerOptions || {}).paths || {}),
+      ...tsjsPaths,
+    }
+    const compilerOptions = {
+      ...(opts.compilerOptions || {}),
+      paths,
+    }
+    const options = {...opts, compilerOptions}
+    plugins[pluginPos] = new Consructor(options)
+  }
+}
+
 function aliasDangerous(aliasMap) {
   const aliasLocal = Object.keys(aliasMap).reduce( (a,i) => {
     a[i] = path.resolve(paths.appPath, aliasMap[i])
@@ -53,6 +110,7 @@ function aliasDangerous(aliasMap) {
     expandResolveAlias(config.resolve, aliasLocal)
     expandRulesInclude(config.module.rules, Object.values(aliasLocal))
     expandPluginsScope(config.resolve.plugins, Object.values(aliasLocal), Object.values(aliasLocal))
+    expandPluginsTsChecker(config.plugins, './tsconfig.paths.json')
     return config
   }
 }
