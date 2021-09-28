@@ -8,13 +8,18 @@
     "url": "https://github.com/oklas/react-app-rewire-alias"
   },
   "keywords": [
+    "create-react-app",
     "alias",
     "rewire",
+    "craco",
+    "cra",
+    "aliases",
+    "webpack",
+    "jest",
     "outside of src",
     "imports restriction",
     "monorepo",
     "multirepo",
-    "create-react-app",
     "react-app-rewire"
   ],
   "author": "Serguei Okladnikov <oklaspec@gmail.com> (https://github.com/oklas)",
