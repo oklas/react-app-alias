@@ -14,8 +14,14 @@ test('renders component from near src', () => {
   expect(nearElement).toBeInTheDocument();
 });
 
-test('renders component from above root', () => {
+test('renders JS component from above root', () => {
   render(<App />);
   const aboveElement = screen.getByText(/Above root js/i);
+  expect(aboveElement).toBeInTheDocument();
+});
+
+test('renders TS component from above root', () => {
+  render(<App />);
+  const aboveElement = screen.getByText(/Above root ts/i);
   expect(aboveElement).toBeInTheDocument();
 });
