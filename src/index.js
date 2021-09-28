@@ -88,8 +88,8 @@ function aliasJest(aliasMap) {
   }
 }
 
-function configPaths(configPath = '') {
-  const confPath = (
+function configFilePath(configPath = '') {
+  return (
     configPath.length > 0 && fs.existsSync(path.resolve(paths.appPath, configPath)) ?
       path.resolve(paths.appPath, configPath) :
     fs.existsSync(path.resolve(paths.appPath, 'tsconfig.json')) ?
@@ -98,22 +98,30 @@ function configPaths(configPath = '') {
       path.resolve(paths.appPath, 'jsconfig.json') :
     ''
   )
+}
 
+function configPathsRaw(confPath) {
   if(!confPath)
     throw Error('react-app-rewire-alias:configPaths: there is no config file found')
 
   const conf = require(confPath)
   const extmsg = !conf.extends ? '' : `, specify ${conf.extends} instead of ${confPath} for configPaths()`
 
-  if(typeof conf.compilerOptions.paths !== 'object' )
+  if(typeof conf.compilerOptions.paths !== 'object')
     throw Error(`
       react-app-rewire-alias:configPaths: array expected for paths${extmsg}`)
 
   if(!conf.compilerOptions || !conf.compilerOptions.paths)
     return {}
+  
+  return conf.compilerOptions.paths
+}
 
-  return Object.keys(conf.compilerOptions.paths).reduce( (a, path) => {
-    const value = conf.compilerOptions.paths[path]
+function configPaths(configPath = '') {
+  const confPath = configFilePath(configPath)
+  const paths = configPathsRaw(confPath)
+  return Object.keys(paths).reduce( (a, path) => {
+    const value = paths[path]
     const target = Array.isArray(value) ? value[0] : value
     a[path.replace(/\/\*$/,'')] = target.replace(/\/\*$/,'')
     return a
@@ -142,6 +150,8 @@ const CracoAliasPlugin = {
 module.exports = {
   alias,
   aliasJest,
+  configFilePath,
+  configPathsRaw,
   configPaths,
   expandResolveAlias,
   expandRulesInclude,
