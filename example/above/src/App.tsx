@@ -1,7 +1,7 @@
 import React from 'react'
 import NearSrc from 'near-src/NearSrc'
 import AboveRootJs from 'above-root-js/AboveRootJs'
-//import AboveRootTs from 'above-root-js/AboveRootTs'
+import AboveRootTs from 'above-root-ts/AboveRootTs'
 import './App.css'
 
 function App() {
@@ -10,7 +10,7 @@ function App() {
       <h2>Main</h2>
       <NearSrc />
       <AboveRootJs/>
-      {/*<AboveRootTs />*/}
+      <AboveRootTs />
     </div>
   );
 }
