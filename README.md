@@ -1,4 +1,4 @@
-# Alias solution for rewired create-react-app
+# Alias solution for craco or rewired create-react-app
 
 This is more than simple alias. This is also a multi-project `src`
 directory. Currently, `create-react-app` (CRA) does not support more than one
