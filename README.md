@@ -3,7 +3,7 @@
 This is more than simple alias. This is also a multi-project `src`
 directory. Currently, `create-react-app` (CRA) does not support more than one
 `src` directory in the project. Monorepo, multi-repo and library projects with
-examples require more than one directories like `src`.
+examples require more than one directory like `src`.
 
 This is merely an alias and multi-source solution for CRA
 and this is not a replacement for multi-package management tools like
@@ -36,7 +36,7 @@ This requires to modify the CRA webpack configuration in runtime
 #### Advantages over other solutions:
 
  * provided fully functional aliases and allows the use of Babel, JSX, etc.
-   outside of `src` (outside of `root` see section below)
+   outside of `src` (outside of `root` see the section below)
 
  * provided fully secure aliases and uses the same module scope plugin from
    the original create-react-app package for modules (instead of removing it),
@@ -58,17 +58,17 @@ npm install --save-dev react-app-rewired react-app-rewire-alias
 
 Current `create-react-app` and `react-scripts` **v4.0** has a bug which is fixed here:
 [create-react-app #9921](https://github.com/facebook/create-react-app/pull/9921) - but
-it does released yet. Use previous version of create-react-app/react-scripts or
-wait for new release or check commit referenced in #9 to learn how make it worked
+it hasn't been released yet. Use the previous version of create-react-app/react-scripts or
+wait for the new release or check commit referenced in #9 to learn how to make it work
 using patch-package.
 
-Place for alias foldes is recommended near to **src**.
-Alias folders outside of the root of project is not recommended.
+A place for alias folders is recommended near to **src**.
+Alias folders outside of the root of the project are not recommended.
 
-There two approach to configure: `simple` - only with js projects.
-Another is `with ts/js config` - for both js and typescript projects.
+There are two approaches to configure: `simple` - only with js projects.
+Another way is `with ts/js config` - for both js and typescript projects.
 
-The simple way is just configure `create-app-rewired` (see below or its docs)
+The simple way is to configure `create-app-rewired` (see below or its docs)
 and create **config-overrides.js** like this:
 
 ```js
@@ -104,7 +104,7 @@ module.exports.jest = aliasJest(aliasMap)
 #### Add **extends** section to **jsconfig.json** or **tsconfig.json**
 
 The **paths** section must not be configured directly in `jsconfig.json` or `tsconfig.json`
-but in separated extends file.
+but in a separate extends file.
 
 Specify **extends** section
 
@@ -120,7 +120,7 @@ Specify **extends** section
 
 #### Configure alias in **jsconfig.paths.json** or **tsconfig.paths.json**
 
-Create separated file `jsconfig.paths.json` or `tsconfig.paths.json`, like this:
+Create a separate file `jsconfig.paths.json` or `tsconfig.paths.json`, like this:
 
 ```js
 // jsconfig.paths.json or tsconfig.paths.json
@@ -137,9 +137,9 @@ Create separated file `jsconfig.paths.json` or `tsconfig.paths.json`, like this:
 
 #### Using react-app-rewired
 
-Integrating `react-app-rewired` into your project is very simple
+Integrating `react-app-rewired` into your project is simple
 (see [its documentation](https://github.com/timarney/react-app-rewired#readme)):
-Create `config-overrides.js` mentioned above in the project's root directory
+Create `config-overrides.js` mentioned above, in the project's root directory
 (the same including the `package.json` and `src` directory)
 and rewrite the `package.json` like this:
 
@@ -197,16 +197,16 @@ The function `alias()` accepts aliases declared in form:
 ```
 
 To make all things worked, aliases must be declared in `jsconfig.json` or `tsconfig.json`.
-However it must beclared in separated extends file (see section `Workaround for
+However, it must be declared in a separate extends file (see section `Workaround for
 "aliased imports are not supported"` below)
 
-The result is function which modify wepack config
+The result is a function which will modify Wepack config
 
 * **configPaths()**
 
 The function `configPaths()` loads paths from file compatible with `jsconfig.json`
 or `tsconfig.json` and returns path in form acceptable for `alias()` function.
-The `tsconfig.json` is prioritized over the `jsconfig.json` in loading sequence.
+The `tsconfig.json` is prioritized over the `jsconfig.json` in the loading sequence.
 
 * **extendability**
 
@@ -265,8 +265,7 @@ with that file's subsequent inclusion in the `tsconfig.json` using `extends`:
 ## Outside of root
 
 The base alias implementation supports aliases near `src` and in `src` directory. It
-provides aliases with same feature set as original `create-react-app`. As far
-`create-react-app` does not supports aliases and additional `src`-like directories as
+provides aliases with the same feature set as the original `create-react-app`. `create-react-app` does not support aliases and additional `src`-like directories as
 it does not supports aliases outside of the `root` project directory.
 
 Aliases outside or project `root` directory may be implemented with some
@@ -297,17 +296,17 @@ module.exports = function override(config) {
 
 * **keep only one `node_modules` directory**
 
-Confusions in deps versions may bring unclear errors or problems. For example application
+Confusions in deps versions may bring unclear errors or problems. For example, an application
 is not working without any error. Or another example is error in `react-router` - `<Route>`
 component do not see `<Router>` when actually code is correct and it falls with:
 
 > should not use Route or withRouter() outside a Router
 
-This may be a result of some confusions in `node_modules` folders of multirepo projects.
-Same take place in plain `create-react-app` if some how one or more additional
-`node_modulest` directory appers in `src`.
+This may be a result of some confusion in `node_modules` folders for multi-repo projects.
+Same take place in plain `create-react-app` if somehow one or more additional
+`node_modulest` directories appear in `src`.
 
-To avoid this problems **use only one main project `node_modules` directory**.
+To avoid this problem **use only one main project `node_modules` directory**.
 
 * **keep away from working with nested project**
 
@@ -315,14 +314,14 @@ Default bundler configuration doesn't assume your configuration and may mix deps
 `node_modules` from different projects (top project and nested project) so this may
 bring mentioned above confusions with deps versions. To avoid problems:
 **do not install and run within nested project directly when it is nested or integrated
-in another one - but only independent toplevel configuration** Or consider to eject
-or configure webpack manually.
+in another one - but only independent top level configuration** Or consider to eject
+or configure Webpack manually.
 
 * **do not relay to deps versions synchronization**
 
-Some libraryes uses `instanceof` and other type comparisions. For example two objects
-created with same params in same code of same library version but installed in
-differenent `node_modules` and bundled separately - will mostly have same data and same
-behaviour but differen instance type. Such libraries will be unable to recognize its own
+Some libraries use `instanceof` and other type comparisions. For example , two objects
+created with the same params in the same code of the same library version but installed in
+different `node_modules` and bundled separately - will mostly have the same data and same
+behaviour but different instance type. Such libraries will be unable to recognize their own
 objects and will lead to unpredictable behaviour. So **use only one main project
 `node_modules` directory**.
