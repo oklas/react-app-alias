@@ -36,7 +36,8 @@ This requires to modify the CRA webpack configuration in runtime
 #### Advantages over other solutions:
 
  * provided fully functional aliases and allows the use of Babel, JSX, etc.
-   outside of `src` (outside of `root` see the section below)
+   outside of `src` (outside of project `root` may be enbled with special way
+   see the section below)
 
  * provided fully secure aliases and uses the same module scope plugin from
    the original create-react-app package for modules (instead of removing it),
@@ -45,80 +46,28 @@ This requires to modify the CRA webpack configuration in runtime
 #### Installation
 
 ```sh
-yarn add --dev react-app-rewired react-app-rewire-alias
+yarn add --dev  react-app-rewire-alias
 ```
 
 or
 
 ```sh
-npm install --save-dev react-app-rewired react-app-rewire-alias
+npm install --save-dev react-app-rewire-alias
 ```
 
-#### Usage
+### Usage
 
-Current `create-react-app` and `react-scripts` **v4.0** has a bug which is fixed here:
-[create-react-app #9921](https://github.com/facebook/create-react-app/pull/9921) - but
-it hasn't been released yet. Use the previous version of create-react-app/react-scripts or
-wait for the new release or check commit referenced in #9 to learn how to make it work
-using patch-package.
+By default folders for alias may be near to **src** folder or in it.
+Outside of project `root` is enabled with special way, see below.
 
-A place for alias folders is recommended near to **src**.
-Alias folders outside of the root of the project are not recommended.
+Usage steps:
 
-There are two approaches to configure: `simple` - only with js projects.
-Another way is `with ts/js config` - for both js and typescript projects.
+* enumerate aliases in *jsconfig.paths.json* or *tsconfig.paths.json*
+* include it in *jsconfig.json* or *tsconfig.json*
+* enable your favorite any of *react-app-rewired* or *craco*
+* apply this package plugin in config of *react-app-rewired* or *craco*
 
-The simple way is to configure `create-app-rewired` (see below or its docs)
-and create **config-overrides.js** like this:
-
-```js
-const {alias, aliasJest} = require('react-app-rewire-alias')
-
-const aliasMap = {
-  example: 'example/src',
-  '@library': 'library/src',
-}
-
-module.exports = alias(aliasMap)
-module.exports.jest = aliasJest(aliasMap)
-```
-
-Using `with ts/js config` includes these steps:
-
-* configure `create-app-rewired` if not yet (short brief below)
-* modify **config-overrides.js** to add `react-app-rewire-alias`
-* add **extends** section to `jsconfig.json` or `tsconfig.json`
-* configure alias in `jsconfig.paths.json` or `tsconfig.paths.json`
-
-#### Modify **config-overrides.js** to add `react-app-rewire-alias`
-
-```js
-const {alias, aliasJest, configPaths} = require('react-app-rewire-alias')
-
-const aliasMap = configPaths('./tsconfig.paths.json')
-
-module.exports = alias(aliasMap)
-module.exports.jest = aliasJest(aliasMap)
-```
-
-#### Add **extends** section to **jsconfig.json** or **tsconfig.json**
-
-The **paths** section must not be configured directly in `jsconfig.json` or `tsconfig.json`
-but in a separate extends file.
-
-Specify **extends** section
-
-```js
-// jsconfig.json or tsconfig.json
-{
-  "extends": "./tsconfig.paths.json", // or "./tsconfig.paths.json"
-  "compilerOptions": {
-    // ...
-  }
-}
-```
-
-#### Configure alias in **jsconfig.paths.json** or **tsconfig.paths.json**
+#### Enumerate aliases in **jsconfig.paths.json** or **tsconfig.paths.json**
 
 Create a separate file `jsconfig.paths.json` or `tsconfig.paths.json`, like this:
 
@@ -135,53 +84,101 @@ Create a separate file `jsconfig.paths.json` or `tsconfig.paths.json`, like this
 }
 ```
 
-#### Using react-app-rewired
+#### Add **extends** section to **jsconfig.json** or **tsconfig.json**
 
-Integrating `react-app-rewired` into your project is simple
-(see [its documentation](https://github.com/timarney/react-app-rewired#readme)):
-Create `config-overrides.js` mentioned above, in the project's root directory
-(the same including the `package.json` and `src` directory)
-and rewrite the `package.json` like this:
+The **paths** section must not be configured directly in `jsconfig.json`
+or `tsconfig.json`, but in a separate extends file mentioned above.
+Now include this file in **extends** section, like this:
 
-```diff
-  "scripts": {
--   "start": "react-scripts start",
-+   "start": "react-app-rewired start",
--   "build": "react-scripts build",
-+   "build": "react-app-rewired build",
--   "test": "react-scripts test",
-+   "test": "react-app-rewired test",
-    "eject": "react-scripts eject"
+```js
+// jsconfig.json or tsconfig.json
+{
+  "extends": "./jsconfig.paths.json", // or "./tsconfig.paths.json"
+  "compilerOptions": {
+    // ...
   }
+}
 ```
 
-That is all. Now you can continue to use `yarn` or `npm` start/build/test commands as usual.
+### Configure plugin for react-app-rewired
 
-#### Using craco
+```js
+// config-overrides.js
+const {alias, configPaths} = require('react-app-rewire-alias')
+
+const aliasMap = configPaths('./tsconfig.paths.json') // or jsconfig.paths.json
+
+module.exports = alias(aliasMap)
+module.exports.jest = aliasJest(aliasMap)
+```
+
+*aliasMap may be filled manually, for non-typescript only, see api*
+
+### Configure plugin for craco
 
 ```js
 // craco.config.js
 
 const {CracoAliasPlugin, configPaths} = require('react-app-rewire-alias')
 
+const aliasMap = configPaths('./tsconfig.paths.json') // or jsconfig.paths.json
+
 module.exports = {
   plugins: [
     {
       plugin: CracoAliasPlugin,
-      options: {alias: configPaths('./tsconfig.paths.json')}
+      options: {alias: aliasMap}
     }
   ]
 }
 ```
 
-Or for dangerious mode (see *outside of root* section):
+*aliasMap may be filled manually, for non-typescript only, see api*
+
+
+#### Enable react-app-rewired
+
+Integrating `react-app-rewired` into your project is simple
+(see [its documentation](https://github.com/timarney/react-app-rewired#readme)):
+Create `config-overrides.js` mentioned above, in the project's root directory
+(the same including the `package.json` and `src` directory).
+Install `react-app-rewired` 
+
+```sh
+yarn add --dev react-app-rewired
+- or -
+npm install --save-dev react-app-rewired
+```
+and rewrite the `package.json` like this:
 
 ```diff
-- const { CracoAliasPlugin, configPaths } = require('react-app-rewire-alias');
-+ const { CracoAliasPlugin, configPaths } = require('react-app-rewire-alias/lib/aliasDangerous');
+  "scripts": {
+-   "start": "react-scripts start",
++   "start": "react-app-rewired start",
++   ... // same way
+  }
 ```
 
+#### Enable craco
 
+According to [craco](https://github.com/gsoft-inc/craco/blob/master/packages/craco/README.md#installation)
+docs install craco:
+
+```sh
+yarn add --dev craco
+- or -
+npm install --save-dev craco
+``` 
+
+and replace `react-scripts` in `package.json`:
+
+```diff
+  "scripts": {
+-   "start": "react-scripts start",
++   "start": "craco start",
++   ... // same way
+  }
+```
 
 #### API
 
@@ -190,10 +187,12 @@ Or for dangerious mode (see *outside of root* section):
 The function `alias()` accepts aliases declared in form:
 
 ```js
-{
+const aliasMap = {
   example: 'example/src',
   '@library': 'library/src',
 }
+
+module.exports = alias(aliasMap)
 ```
 
 To make all things worked, aliases must be declared in `jsconfig.json` or `tsconfig.json`.
@@ -207,6 +206,12 @@ The result is a function which will modify Wepack config
 The function `configPaths()` loads paths from file compatible with `jsconfig.json`
 or `tsconfig.json` and returns path in form acceptable for `alias()` function.
 The `tsconfig.json` is prioritized over the `jsconfig.json` in the loading sequence.
+
+```js
+const aliasMap = configPaths('./tsconfig.paths.json')
+
+module.exports = alias(aliasMap)
+```
 
 * **extendability**
 
@@ -264,8 +269,16 @@ with that file's subsequent inclusion in the `tsconfig.json` using `extends`:
 
 ## Outside of root
 
-The base alias implementation supports aliases near `src` and in `src` directory. It
-provides aliases with the same feature set as the original `create-react-app`. `create-react-app` does not support aliases and additional `src`-like directories as
+Alias folders outside of the root of the project currently fully functional and
+works fine but are not recommended. It has more complicated implementation which
+currently named *dangerous* and exported from package separately. Due to complicity
+it has a higher probability of being incompatible with the next release of
+*create-react-app* until an update is released, since these are different systems.
+However same is for the base implementation but with less probability of being
+incompatibe with next cra release. 
+
+It provides aliases with the same feature set as the original `create-react-app`.
+`create-react-app` does not support aliases and additional `src`-like directories as
 it does not supports aliases outside of the `root` project directory.
 
 Aliases outside or project `root` directory may be implemented with some
@@ -273,7 +286,7 @@ Aliases outside or project `root` directory may be implemented with some
 of feature set. That is solved by disabling ESLint checking.
 
 This mplementation is moved to separated code set named `aliasDangerous` to be not confused
-with `alias`. To use it husr replace import like this:
+with `alias`. To use it just replace import like this:
 
 ```diff
 - const {alias, configPaths, CracoAliasPlugin} = require('react-app-rewire-alias')
