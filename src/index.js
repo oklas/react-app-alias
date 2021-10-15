@@ -33,7 +33,6 @@ function expandPluginsScope(plugins, dirs, files) {
     .map(x => x.constructor.name)
     .indexOf(pluginName)
   if(pluginPos !== -1) {
-    plugins.splice(pluginPos, 1)
     plugins[pluginPos] = new ModuleScopePlugin(dirs, files)
   }
 }
