@@ -86,7 +86,6 @@ function expandPluginsTsChecker(plugins, configPath) {
   if(pluginPos !== -1) {
     const opts = plugins[pluginPos].options
     const Consructor = plugins[pluginPos].constructor
-    plugins.splice(pluginPos, 1)
     const paths = {
       ...packagePaths,
       ...((opts.compilerOptions || {}).paths || {}),
