@@ -285,7 +285,7 @@ Aliases outside or project `root` directory may be implemented with some
 [limitation](https://github.com/oklas/react-app-rewire-alias/issues/3#issuecomment-633947385)
 of feature set. That is solved by disabling ESLint checking.
 
-This mplementation is moved to separated code set named `aliasDangerous` to be not confused
+This implementation is moved to separated code set named `aliasDangerous` to be not confused
 with `alias`. To use it just replace import like this:
 
 ```diff
