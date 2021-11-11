@@ -1,6 +1,6 @@
 {
   "name": "react-app-rewire-alias",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Alias for craco or rewired create-react-app",
   "main": "src/index.js",
   "repository": {
