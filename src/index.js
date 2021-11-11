@@ -91,8 +91,12 @@ function configFilePath(configPath = '') {
   return (
     configPath.length > 0 && fs.existsSync(path.resolve(paths.appPath, configPath)) ?
       path.resolve(paths.appPath, configPath) :
+    fs.existsSync(path.resolve(paths.appPath, 'tsconfig.paths.json')) ?
+      path.resolve(paths.appPath, 'tsconfig.paths.json') :
     fs.existsSync(path.resolve(paths.appPath, 'tsconfig.json')) ?
       path.resolve(paths.appPath, 'tsconfig.json') :
+    fs.existsSync(path.resolve(paths.appPath, 'jsconfig.paths.json')) ?
+      path.resolve(paths.appPath, 'jsconfig.paths.json') :
     fs.existsSync(path.resolve(paths.appPath, 'jsconfig.json')) ?
       path.resolve(paths.appPath, 'jsconfig.json') :
     ''
