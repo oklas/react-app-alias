@@ -110,13 +110,13 @@ function configPathsRaw(confPath) {
   const conf = require(confPath)
   const extmsg = !conf.extends ? '' : `, specify ${conf.extends} instead of ${confPath} for configPaths()`
 
+  if(!conf.compilerOptions || !conf.compilerOptions.paths)
+    return {}
+  
   if(typeof conf.compilerOptions.paths !== 'object')
     throw Error(`
       react-app-rewire-alias:configPaths: array expected for paths${extmsg}`)
 
-  if(!conf.compilerOptions || !conf.compilerOptions.paths)
-    return {}
-  
   return conf.compilerOptions.paths
 }
 
