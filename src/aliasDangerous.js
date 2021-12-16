@@ -95,7 +95,13 @@ function expandPluginsTsChecker(plugins, configPath) {
       ...(opts.compilerOptions || {}),
       paths,
     }
-    const options = {...opts, compilerOptions}
+    const options = {
+      ...opts,
+      typescript: {
+        ...opts.typescript,
+        configOverwrite: compilerOptions,
+      }
+    }
     plugins[pluginPos] = new Consructor(options)
   }
 }
