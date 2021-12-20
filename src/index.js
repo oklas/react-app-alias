@@ -33,6 +33,9 @@ function expandPluginsScope(plugins, dirs, files) {
     .map(x => x.constructor.name)
     .indexOf(pluginName)
   if(pluginPos !== -1) {
+    const oldModuleScopePlugin = plugins[pluginPos]
+    const allowedFiles = [...oldModuleScopePlugin.allowedFiles].filter(f => f !== paths.appPackageJson)
+    files.push(...allowedFiles)
     plugins[pluginPos] = new ModuleScopePlugin(dirs, files)
   }
 }
