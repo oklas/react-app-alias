@@ -1,0 +1,29 @@
+{
+  "name": "react-app-alias-ex",
+  "version": "0.0.0",
+  "description": "Alias for craco or rewire react app",
+  "keywords": [
+    "alias"
+  ],
+  "author": "Serguei Okladnikov <oklaspec@gmail.com>",
+  "homepage": "https://github.com/oklas/react-app-alias",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "directories": {
+    "src": "src",
+    "test": "__tests__"
+  },
+  "files": [
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oklas/react-app-alias.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/oklas/react-app-alias/issues"
+  }
+}
