@@ -3,5 +3,6 @@
     "packages/*",
     "example/*"
   ],
-  "version": "independent"
+  "version": "independent",
+  "npmClient": "yarn"
 }
