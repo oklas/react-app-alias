@@ -48,12 +48,12 @@ function expandRulesInclude(rules, include) {
 
 function packageList() {
   const packagePath = path.resolve(paths.appPath, 'package.json') 
-  const package = require(packagePath)
+  const pack = require(packagePath)
   const depsSections = [
-    ...Object.keys(package).filter(s => s.match(/.*Dependencies/)),
+    ...Object.keys(pack).filter(s => s.match(/.*Dependencies/)),
     'dependencies',
   ]
-  const list = [].concat(...depsSections.map(s => Object.keys(package[s])))
+  const list = [].concat(...depsSections.map(s => Object.keys(pack[s])))
   return list
 }
 

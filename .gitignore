@@ -1,3 +1,4 @@
 node_modules
-exmple/*/node_modules
+example/*/node_modules
 test/dists
+coverage

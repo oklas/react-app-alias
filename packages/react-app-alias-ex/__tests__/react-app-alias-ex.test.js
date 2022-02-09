@@ -1,7 +1,7 @@
 'use strict';
 
-const reactAppAliasEx = require('..');
+const reactAppAliasEx = require('../src');
 
 describe('react-app-alias-ex', () => {
-    it('tested by tests in projects in example folder');
+  test.todo('tested by tests in projects in example folder');
 });
