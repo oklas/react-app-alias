@@ -2,9 +2,8 @@
   "name": "react-app-alias",
   "private": true,
   "devDependencies": {
-    "jest": "^27.5.0",
     "lerna": "^4.0.0",
-    "react-scripts": "^5.0.0"
+    "react-scripts": "^4.0.3"
   },
   "scripts": {
     "test:unit": "jest"
