@@ -120,7 +120,7 @@ function aliasJest(aliasMap) {
   }
 }
 
-function aliasDangerous(aliasMap) {
+function aliasWebpack(aliasMap) {
   const aliasLocal = Object.keys(aliasMap).reduce( (a,i) => {
     a[i] = path.resolve(paths.appPath, aliasMap[i])
     return a
@@ -136,7 +136,7 @@ function aliasDangerous(aliasMap) {
 
 const CracoAliasPlugin = {
   overrideWebpackConfig: function({webpackConfig, pluginOptions}) {
-    return aliasDangerous(pluginOptions.alias||configPaths())(webpackConfig)
+    return aliasWebpack(pluginOptions.alias||configPaths())(webpackConfig)
   },
   overrideJestConfig: function({jestConfig, pluginOptions}) {
     return aliasJest(pluginOptions.alias||configPaths())(jestConfig)
@@ -144,7 +144,7 @@ const CracoAliasPlugin = {
 }
 
 module.exports = {
-  aliasDangerous,
+  aliasWebpack,
   aliasJest,
   configPaths,
   expandResolveAlias,
