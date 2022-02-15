@@ -6,6 +6,9 @@
     "react-scripts": "^4.0.3"
   },
   "scripts": {
+    "example:alias:install": "cd example/main && yarn install",
+    "example:aliasex:install": "cd example/above && yarn install",
+    "example:install": "yarn example:alias:install && yarn example:aliasex:install",
     "test:unit": "jest"
   }
 }
