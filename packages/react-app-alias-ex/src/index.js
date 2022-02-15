@@ -7,7 +7,7 @@ const {
   configPaths,
   expandResolveAlias,
   expandPluginsScope,
-} = require('./index')
+} = require('react-app-alias')
 
 function requireEslintLoaderModule() {
   try {
