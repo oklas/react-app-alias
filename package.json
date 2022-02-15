@@ -12,6 +12,7 @@
     "example:aliasex:test": "cd example/above && yarn test --watchAll=false",
     "example:install": "yarn example:alias:install && yarn example:aliasex:install",
     "example:test": "yarn example:alias:test && yarn example:aliasex:test",
+    "coverage": "jest --coverage",
     "test:unit": "jest",
     "test:integration": "yarn example:alias:test && yarn example:aliasex:test",
     "test": "yarn test:unit && yarn test:integration"

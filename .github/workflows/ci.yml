@@ -1,0 +1,108 @@
+name: Continuous Integration
+
+on: [push, pull_request]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14, 16]
+      fail-fast: false
+    steps:
+      - name: Checkout ${{ matrix.node-version }}
+        uses: actions/checkout@v2
+
+      - name: Get yarn cache
+        id: yarn-cache
+        run: |
+          echo "::set-output name=path::$(yarn cache dir)"
+          echo "::set-output name=version::$(yarn -v)"
+
+      - name: Setup Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Cache dependencies ${{ matrix.node-version }}
+        uses: actions/cache@v2
+        env:
+          key-prefix: ${{ runner.os }}-node-${{ matrix.node-version }}
+        with:
+          path: |
+            **/node_modules
+            **/.eslintcache
+            ${{ steps.yarn-cache.outputs.path }}
+          key: ${{ env.key-prefix }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ env.key-prefix }}-
+
+      - name: Install node_modules
+        run: yarn && npx lerna bootstrap
+
+      - name: Test – unit tests
+        run: yarn test:unit --coverage
+        env:
+          CI: true
+
+      - name: Test – integration
+        run: yarn test:integration
+
+      - name: Test – Eslint
+        if: ${{ always() && matrix.node-version == '14' }}
+        run: yarn eslint
+
+      - name: Test – TSCheck
+        #if: ${{ always() && matrix.node-version == '14' }}
+        if: false
+        run: yarn tscheck
+
+      - name: Publish Test Report
+        if: ${{ always() && matrix.node-version == '14' }}
+        uses: mikepenz/action-junit-report@v2
+        with:
+          check_name: JUnit Annotations for Node ${{ matrix.node-version }}
+          report_paths: '**/coverage/*.xml'
+
+      - name: Send codecov.io stats
+        if: matrix.node-version == '14'
+        run: bash <(curl -s https://codecov.io/bash) || echo ''
+
+  publish:
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/alpha' || github.ref == 'refs/heads/beta'
+    needs: [tests]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 14
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js 14
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Cache dependencies 14
+        uses: actions/cache@v2
+        env:
+          key-prefix: ${{ runner.os }}-node-14
+        with:
+          path: |
+            **/node_modules
+            **/.eslintcache
+            ${{ steps.yarn-cache.outputs.path }}
+          key: ${{ env.key-prefix }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ env.key-prefix }}-
+
+      - name: Install node_modules
+        run: yarn
+
+      - name: Build
+        if: false
+        run: yarn build
+
+      - name: Semantic Release
+        run: yarn release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
