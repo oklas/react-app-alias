@@ -8,7 +8,12 @@
   "scripts": {
     "example:alias:install": "cd example/main && yarn install",
     "example:aliasex:install": "cd example/above && yarn install",
+    "example:alias:test": "cd example/main && yarn test --watchAll=false",
+    "example:aliasex:test": "cd example/above && yarn test --watchAll=false",
     "example:install": "yarn example:alias:install && yarn example:aliasex:install",
-    "test:unit": "jest"
+    "example:test": "yarn example:alias:test && yarn example:aliasex:test",
+    "test:unit": "jest",
+    "test:integration": "yarn example:alias:test && yarn example:aliasex:test",
+    "test": "yarn test:unit && yarn test:integration"
   }
 }

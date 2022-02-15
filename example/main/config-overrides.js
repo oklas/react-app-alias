@@ -1,4 +1,4 @@
-const {alias, aliasJest, configPaths} = require('react-app-rewire-alias')
+const {alias, aliasJest, configPaths} = require('react-app-alias')
 
 const aliasPaths = configPaths('./tsconfig.paths.json')
 
