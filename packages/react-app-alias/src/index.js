@@ -49,7 +49,7 @@ function checkOutside(aliasMap) {
   const outside = Object.keys(aliasMap).reduce( (a, i) => {
     if(isOutsideOfRoot(aliasMap[i])) {
       console.error(
-        `alias '${i}' is outside of root - supported only by aliasDangerous`
+        `alias '${i}' is outside of root - supported only by react-app-alias-ex`
       )
       return true
     }
@@ -63,7 +63,7 @@ function checkOutside(aliasMap) {
   }
 }
 
-function alias(aliasMap) {
+function aliasWebpack(aliasMap) {
   checkOutside(aliasMap)
   const aliasLocal = Object.keys(aliasMap).reduce( (a,i) => {
     a[i] = path.resolve(paths.appPath, aliasMap[i])
@@ -154,7 +154,7 @@ const CracoAliasPlugin = {
 }
 
 module.exports = {
-  alias,
+  aliasWebpack,
   aliasJest,
   configFilePath,
   configPathsRaw,
