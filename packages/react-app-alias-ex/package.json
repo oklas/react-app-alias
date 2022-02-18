@@ -3,7 +3,19 @@
   "version": "0.0.0",
   "description": "Alias for craco or rewire react app",
   "keywords": [
-    "alias"
+    "create-react-app",
+    "alias",
+    "rewire",
+    "craco",
+    "cra",
+    "aliases",
+    "webpack",
+    "jest",
+    "outside of src",
+    "imports restriction",
+    "monorepo",
+    "multirepo",
+    "react-app-rewire"
   ],
   "author": "Serguei Okladnikov <oklaspec@gmail.com>",
   "homepage": "https://github.com/oklas/react-app-alias",
