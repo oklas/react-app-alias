@@ -3,7 +3,9 @@
   "private": true,
   "devDependencies": {
     "lerna": "^4.0.0",
-    "react-scripts": "^4.0.3"
+    "react-scripts": "^4.0.3",
+    "semantic-release": "^19.0.2",
+    "semantic-release-monorepo": "^7.0.5"
   },
   "scripts": {
     "example:alias:install": "cd example/main && yarn install",
@@ -15,6 +17,7 @@
     "coverage": "jest --coverage",
     "test:unit": "jest",
     "test:integration": "yarn example:alias:test && yarn example:aliasex:test",
-    "test": "yarn test:unit && yarn test:integration"
+    "test": "yarn test:unit && yarn test:integration",
+    "release": "lerna exec --concurrency 1 --scope 'react-app-alias*' -- npx --no-install semantic-release -e semantic-release-monorepo"
   }
 }
