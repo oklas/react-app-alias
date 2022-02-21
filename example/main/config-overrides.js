@@ -1,6 +1,6 @@
-const {aliasWebpack, aliasJest, configPaths} = require('react-app-alias')
+const {aliasWebpack, aliasJest} = require('react-app-alias')
 
-const aliasPaths = configPaths('./tsconfig.paths.json')
+const options = {}
 
-module.exports = aliasWebpack(aliasPaths)
-module.exports.jest = aliasJest(aliasPaths)
+module.exports = aliasWebpack(options)
+module.exports.jest = aliasJest(options)
