@@ -3,6 +3,13 @@ const path = require('path')
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
 const paths = require('react-scripts/config/paths')
 
+const guessConfigFiles = [
+  'tsconfig.paths.json',
+  'tsconfig.json',
+  'jsconfig.paths.json',
+  'jsconfig.json',
+]
+
 function expandResolveAlias(resolve, alias) {
   resolve.alias = Object.assign(resolve.alias || {}, alias)
 }
@@ -63,7 +70,8 @@ function checkOutside(aliasMap) {
   }
 }
 
-function aliasWebpack(aliasMap) {
+function aliasWebpack(options) {
+  const aliasMap = defaultOptions(options).aliasMap
   checkOutside(aliasMap)
   const aliasLocal = Object.keys(aliasMap).reduce( (a,i) => {
     a[i] = path.resolve(paths.appPath, aliasMap[i])
@@ -77,7 +85,8 @@ function aliasWebpack(aliasMap) {
   }
 }
 
-function aliasJest(aliasMap) {
+function aliasJest(options) {
+  const aliasMap = defaultOptions(options).aliasMap
   const jestAliasMap = aliasMapForJest(aliasMap)
   return function(config) {
     return {
@@ -91,19 +100,14 @@ function aliasJest(aliasMap) {
 }
 
 function configFilePath(configPath = '') {
-  return (
-    configPath.length > 0 && fs.existsSync(path.resolve(paths.appPath, configPath)) ?
-      path.resolve(paths.appPath, configPath) :
-    fs.existsSync(path.resolve(paths.appPath, 'tsconfig.paths.json')) ?
-      path.resolve(paths.appPath, 'tsconfig.paths.json') :
-    fs.existsSync(path.resolve(paths.appPath, 'tsconfig.json')) ?
-      path.resolve(paths.appPath, 'tsconfig.json') :
-    fs.existsSync(path.resolve(paths.appPath, 'jsconfig.paths.json')) ?
-      path.resolve(paths.appPath, 'jsconfig.paths.json') :
-    fs.existsSync(path.resolve(paths.appPath, 'jsconfig.json')) ?
-      path.resolve(paths.appPath, 'jsconfig.json') :
-    ''
+  if(
+    configPath.length > 0 && fs.existsSync(path.resolve(paths.appPath, configPath))
+  ) return path.resolve(paths.appPath, configPath)
+  const existsPaths = (guessConfigFiles
+    .map(filename => path.resolve(paths.appPath, filename))
+    .filter(pathname => fs.existsSync(pathname))
   )
+  return existsPaths.length ? existsPaths[0] : ''
 }
 
 function configPathsRaw(confPath) {
@@ -134,6 +138,18 @@ function configPaths(configPath = '') {
   }, {})
 }
 
+function defaultOptions(options) {
+  const configPath = configFilePath(
+    options.tsconfig || options.jsconfig
+  )
+  const aliasMap = options.alias || configPaths(configPath)
+  const opts = {
+    ...options,
+    aliasMap,
+  }
+  return opts
+}
+
 function aliasMapForJest(aliasMap) {
   return Object.keys(aliasMap).reduce( (a, i) => {
     const outside = isOutsideOfRoot(aliasMap[i])
@@ -159,6 +175,7 @@ module.exports = {
   configFilePath,
   configPathsRaw,
   configPaths,
+  defaultOptions,
   expandResolveAlias,
   expandRulesInclude,
   expandPluginsScope,

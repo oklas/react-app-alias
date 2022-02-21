@@ -5,6 +5,7 @@ const {
   configFilePath,
   configPathsRaw,
   configPaths,
+  defaultOptions,
   expandResolveAlias,
   expandPluginsScope,
 } = require('react-app-alias')
@@ -106,7 +107,8 @@ function expandPluginsTsChecker(plugins, configPath) {
   }
 }
 
-function aliasJest(aliasMap) {
+function aliasJest(options) {
+  const aliasMap = defaultOptions(options).aliasMap
   const aliasJestInstance = aliasJestSafe(aliasMap)
   return function(config) {
     const expanded = aliasJestInstance(config)
@@ -120,7 +122,8 @@ function aliasJest(aliasMap) {
   }
 }
 
-function aliasWebpack(aliasMap) {
+function aliasWebpack(options) {
+  const aliasMap = defaultOptions(options).aliasMap
   const aliasLocal = Object.keys(aliasMap).reduce( (a,i) => {
     a[i] = path.resolve(paths.appPath, aliasMap[i])
     return a
