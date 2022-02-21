@@ -104,11 +104,11 @@ Now include this file in **extends** section, like this:
 
 ```js
 // config-overrides.js
-const {alias, configPaths} = require('react-app-rewire-alias')
+const {aliasWebpack, configPaths} = require('react-app-rewire-alias')
 
 const aliasMap = configPaths('./tsconfig.paths.json') // or jsconfig.paths.json
 
-module.exports = alias(aliasMap)
+module.exports = aliasWebpack(aliasMap)
 module.exports.jest = aliasJest(aliasMap)
 ```
 
@@ -182,9 +182,9 @@ and replace `react-scripts` in `package.json`:
 
 #### API
 
-* **alias(aliasMap)(webpackConfig)**
+* **aliasWebpack(aliasMap)(webpackConfig)**
 
-The function `alias()` accepts aliases declared in form:
+The function `aliasWebpack()` accepts aliases declared in form:
 
 ```js
 const aliasMap = {
@@ -192,7 +192,7 @@ const aliasMap = {
   '@library': 'library/src',
 }
 
-module.exports = alias(aliasMap)
+module.exports = aliasWebpack(aliasMap)
 ```
 
 To make all things worked, aliases must be declared in `jsconfig.json` or `tsconfig.json`.
@@ -204,13 +204,13 @@ The result is a function which will modify Wepack config
 * **configPaths()**
 
 The function `configPaths()` loads paths from file compatible with `jsconfig.json`
-or `tsconfig.json` and returns path in form acceptable for `alias()` function.
+or `tsconfig.json` and returns path in form acceptable for `aliasWebpack()` function.
 The `tsconfig.json` is prioritized over the `jsconfig.json` in the loading sequence.
 
 ```js
 const aliasMap = configPaths('./tsconfig.paths.json')
 
-module.exports = alias(aliasMap)
+module.exports = aliasWebpack(aliasMap)
 ```
 
 * **extendability**
@@ -220,7 +220,7 @@ with another:
 
 ```js
 module.exports = function override(config) {
-  const modifiedConfig = alias(...)(config)
+  const modifiedConfig = aliasWebpack(...)(config)
   ...
   return someElse(modifiedConfig)
 }
