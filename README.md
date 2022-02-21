@@ -25,7 +25,7 @@ This requires to modify the CRA webpack configuration in runtime
 
 * quality and secure exports from outside `src`
 * absolute imports
-* any `./directory` at root outside of `src` with Babel and CRA features
+* any `./directory` at root outside of `src` with Babel/Typescript and all CRA features
 
 #### This is designed for:
 
@@ -46,26 +46,26 @@ This requires to modify the CRA webpack configuration in runtime
 #### Installation
 
 ```sh
-yarn add --dev  react-app-rewire-alias
+yarn add --dev react-app-alias
 ```
 
 or
 
 ```sh
-npm install --save-dev react-app-rewire-alias
+npm install --save-dev react-app-alias
 ```
 
 ### Usage
 
 By default folders for alias may be near to **src** folder or in it.
-Outside of project `root` is enabled with special way, see below.
+Outside of project `root` is implemented in `react-app-alias-ex` (suffix `-ex`).
 
 Usage steps:
 
 * enumerate aliases in *jsconfig.paths.json* or *tsconfig.paths.json*
 * include it in *jsconfig.json* or *tsconfig.json*
 * enable your favorite any of *react-app-rewired* or *craco*
-* apply this package plugin in config of *react-app-rewired* or *craco*
+* apply react-app-alias in config
 
 #### Enumerate aliases in **jsconfig.paths.json** or **tsconfig.paths.json**
 
@@ -100,43 +100,43 @@ Now include this file in **extends** section, like this:
 }
 ```
 
-### Configure plugin for react-app-rewired
+### Configure plugin for craco or react-app-rewired
+
+* **`react-app-rewired`**
 
 ```js
 // config-overrides.js
-const {aliasWebpack, configPaths} = require('react-app-rewire-alias')
+const {aliasWebpack, aliasJest} = require('react-app-alias')
 
-const aliasMap = configPaths('./tsconfig.paths.json') // or jsconfig.paths.json
+const options = {} // default is empty for most cases
 
-module.exports = aliasWebpack(aliasMap)
-module.exports.jest = aliasJest(aliasMap)
+module.exports = aliasWebpack(options)
+module.exports.jest = aliasJest(options)
 ```
 
-*aliasMap may be filled manually, for non-typescript only, see api*
-
-### Configure plugin for craco
+* **`craco`**
 
 ```js
 // craco.config.js
 
-const {CracoAliasPlugin, configPaths} = require('react-app-rewire-alias')
+const {CracoAliasPlugin} = require('react-app-rewire-alias')
 
-const aliasMap = configPaths('./tsconfig.paths.json') // or jsconfig.paths.json
+const options = {} // default is empty for most cases
 
 module.exports = {
   plugins: [
     {
       plugin: CracoAliasPlugin,
-      options: {alias: aliasMap}
+      options: {}
     }
   ]
 }
 ```
 
-*aliasMap may be filled manually, for non-typescript only, see api*
 
+#### Enable craco or react-app-rewired
 
-#### Enable react-app-rewired
+* **`react-app-rewired`**
 
 Integrating `react-app-rewired` into your project is simple
 (see [its documentation](https://github.com/timarney/react-app-rewired#readme)):
@@ -159,7 +159,7 @@ and rewrite the `package.json` like this:
   }
 ```
 
-#### Enable craco
+* **`craco`**
 
 According to [craco](https://github.com/gsoft-inc/craco/blob/master/packages/craco/README.md#installation)
 docs install craco:
@@ -182,7 +182,24 @@ and replace `react-scripts` in `package.json`:
 
 #### API
 
-* **aliasWebpack(aliasMap)(webpackConfig)**
+* **options**
+
+```ts
+  Options {
+    alias?: { [alias: string]: string }; // optional alias map
+    tsconfig?: string, // optinal tsconfig.json path
+    jsconfig?: string, // options jsconfig.json path
+  }
+```
+
+  // optional alias map has following form:  
+  const alias = {
+    example: 'example/src',
+    '@library': 'library/src',
+  }
+
+
+* **aliasWebpack(options)(webpackConfig)**
 
 The function `aliasWebpack()` accepts aliases declared in form:
 
@@ -192,7 +209,12 @@ const aliasMap = {
   '@library': 'library/src',
 }
 
-module.exports = aliasWebpack(aliasMap)
+const options = {
+  alias: aliasMap,
+}
+
+module.exports = aliasWebpack(options)
+module.exports.jest = aliasJest(options)
 ```
 
 To make all things worked, aliases must be declared in `jsconfig.json` or `tsconfig.json`.
@@ -209,6 +231,10 @@ The `tsconfig.json` is prioritized over the `jsconfig.json` in the loading seque
 
 ```js
 const aliasMap = configPaths('./tsconfig.paths.json')
+
+const options = {
+  alias: aliasMap,
+}
 
 module.exports = aliasWebpack(aliasMap)
 ```
@@ -270,39 +296,17 @@ with that file's subsequent inclusion in the `tsconfig.json` using `extends`:
 ## Outside of root
 
 Alias folders outside of the root of the project currently fully functional and
-works fine but are not recommended. It has more complicated implementation which
-currently named *dangerous* and exported from package separately. Due to complicity
-it has a higher probability of being incompatible with the next release of
-*create-react-app* until an update is released, since these are different systems.
-However same is for the base implementation but with less probability of being
-incompatibe with next cra release. 
+works fine but are not recommended. It may bring hard-to-detect errors.
 
-It provides aliases with the same feature set as the original `create-react-app`.
-`create-react-app` does not support aliases and additional `src`-like directories as
-it does not supports aliases outside of the `root` project directory.
+Alias with support of **Outside of root** is implemented in separated library:
 
-Aliases outside or project `root` directory may be implemented with some
-[limitation](https://github.com/oklas/react-app-rewire-alias/issues/3#issuecomment-633947385)
-of feature set. That is solved by disabling ESLint checking.
+`react-app-alias-ex`
 
-This implementation is moved to separated code set named `aliasDangerous` to be not confused
-with `alias`. To use it just replace import like this:
+with identical API, just install and add suffix `-ex` in import statement:
 
 ```diff
-- const {alias, configPaths, CracoAliasPlugin} = require('react-app-rewire-alias')
-+ const {aliasDangerous, configPaths, CracoAliasPlugin} = require('react-app-rewire-alias/lib/aliasDangerous')
-```
-
-And replace `alias` with `aliasDangerous`:
-
-```js
-module.exports = function override(config) {
-  aliasDangerous({
-    ...configPaths('tsconfig.paths.json')
-  })(config)
-
-  return config
-}
+- const {aliasWebpack, CracoAliasPlugin} = require('react-app-alias')
++ const {aliasWebpack, CracoAliasPlugin} = require('react-app-alias-ex')
 ```
 
 ## Tips

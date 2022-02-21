@@ -1,13 +1,11 @@
 /* eslint-disable */
-const { CracoAliasPlugin, configPaths } = require('react-app-alias-ex');
-const aliasPaths = configPaths('./tsconfig.paths.json')
+const { CracoAliasPlugin } = require('react-app-alias-ex');
 
 module.exports = {
   plugins: [
     {
       plugin: CracoAliasPlugin,
       options: {
-        alias: aliasPaths,
       },
     },
   ],
