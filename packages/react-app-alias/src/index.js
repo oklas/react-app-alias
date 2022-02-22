@@ -114,17 +114,27 @@ function configPathsRaw(confPath) {
   if(!confPath)
     throw Error('react-app-rewire-alias:configPaths: there is no config file found')
 
+  const confdir = path.dirname(confPath)
   const conf = require(confPath)
-  const extmsg = !conf.extends ? '' : `, specify ${conf.extends} instead of ${confPath} for configPaths()`
+  const confPaths = conf.compilerOptions && conf.compilerOptions.paths ?
+    conf.compilerOptions.paths : {}
 
-  if(!conf.compilerOptions || !conf.compilerOptions.paths)
-    return {}
+  const extUrl = conf.compilerOptions.extends
+  const extPath = extUrl ? path.resolve(confdir, extUrl) : ''
+  const ext = extUrl ? require(extPath) : {}
+
+  const extPaths = ext.compilerOptions && ext.compilerOptions.paths ?
+    ext.compilerOptions.paths : {}
+
+  if(typeof confPaths !== 'object')
+    throw Error(`react-app-alias:configPaths: '${confPath}' array expected for paths`)
+  if(typeof extPaths !== 'object')
+    throw Error(`react-app-alias:configPaths: '${extPath}' array expected for paths`)
   
-  if(typeof conf.compilerOptions.paths !== 'object')
-    throw Error(`
-      react-app-rewire-alias:configPaths: array expected for paths${extmsg}`)
-
-  return conf.compilerOptions.paths
+  return {
+    ...confPaths,
+    ...extPaths,
+  }
 }
 
 function configPaths(configPath = '') {
