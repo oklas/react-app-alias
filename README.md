@@ -119,7 +119,7 @@ module.exports.jest = aliasJest(options)
 ```js
 // craco.config.js
 
-const {CracoAliasPlugin} = require('react-app-rewire-alias')
+const {CracoAliasPlugin} = require('react-app-alias')
 
 const options = {} // default is empty for most cases
 

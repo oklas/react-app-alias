@@ -39,6 +39,6 @@
     "url": "https://github.com/oklas/react-app-alias/issues"
   },
   "dependencies": {
-    "react-app-alias": "^0.0.0"
+    "react-app-alias": "^2.0.0"
   }
 }
