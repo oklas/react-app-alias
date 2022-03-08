@@ -18,6 +18,8 @@
 + const {aliasWebpack} = require('react-app-alias')
 ```
 
+If dangerous mode is not used, scroll dow through next section to continue.
+
 ### Dangerous mode
 
 Dangerous mode is renamed to extended/extremal and the implementation
@@ -41,4 +43,22 @@ is moved to separated liblrary with suffix **`-ex`**.
 + const {aliasWebpack} = require('react-app-alias-ex')
 ```
 
+### Options
 
+Before the agrument of `aliasWebpack()` and `aliasJest()` was alias map.
+Now the argument of these functions is options.
+Alias map now is `alias` option. So replace:
+
+```diff
+const aliasMap = configPaths("./tsconfig.paths.json")
+// or possible alias map created in code
+const aliasMap = {
+  '@app': 'src/app',
+  '@lib': 'lib',
+}
+
+- module.exports = aliasWebpack(aliasMap)
+- module.exports.jest = aliasJest(aliasMap)
++ module.exports = aliasWebpack({alias: aliasMap})
++ module.exports.jest = aliasJest({alias: aliasMap})
+```
