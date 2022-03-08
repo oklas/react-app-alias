@@ -62,3 +62,21 @@ const aliasMap = {
 + module.exports = aliasWebpack({alias: aliasMap})
 + module.exports.jest = aliasJest({alias: aliasMap})
 ```
+
+Fucntion `configPaths()` now become needed in rare cases. It is used internally.
+Now you can specify path of *tsconfig.json* or *jsconfig.json* as an option.
+
+```diff
+- const aliasMap = configPaths("./tsconfig.paths.json")
+- module.exports = aliasWebpack({alias: aliasMap})
++ module.exports = aliasWebpack({tsconfig: "./tsconfig.paths.json"})
+```
+
+If you uses standart name of these files you can skip it. It will be opned automatically.
+
+```diff
+- const aliasMap = configPaths("./jsconfig.paths.json")
+- module.exports = aliasWebpack({jsconfig: "./jsconfig.paths.json"})
++ module.exports = aliasWebpack({})
+```
+
