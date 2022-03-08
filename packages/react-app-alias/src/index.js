@@ -64,7 +64,7 @@ function checkOutside(aliasMap) {
   }, false)
   if(outside) {
     console.error(
-      `https://github.com/oklas/react-app-rewire-alias#outside-of-root`
+      `https://github.com/oklas/react-app-alias#outside-of-root`
     )
     process.exit(-1)
   }
@@ -112,7 +112,7 @@ function configFilePath(configPath = '') {
 
 function configPathsRaw(confPath) {
   if(!confPath)
-    throw Error('react-app-rewire-alias:configPaths: there is no config file found')
+    throw Error('react-app-alias:configPaths: there is no [ts|js]config file found')
 
   const confdir = path.dirname(confPath)
   const conf = require(confPath)
@@ -172,10 +172,10 @@ function aliasMapForJest(aliasMap) {
 
 const CracoAliasPlugin = {
   overrideWebpackConfig: function({webpackConfig, pluginOptions}) {
-    return aliasWebpack(pluginOptions.alias||configPaths())(webpackConfig)
+    return aliasWebpack(pluginOptions)(webpackConfig)
   },
   overrideJestConfig: function({jestConfig, pluginOptions}) {
-    return aliasJest(pluginOptions.alias||configPaths())(jestConfig)
+    return aliasJest(pluginOptions)(jestConfig)
   }
 }
 
