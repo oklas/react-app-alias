@@ -99,6 +99,30 @@ function aliasJest(options) {
   }
 }
 
+function autoscan(tasks) {
+  const dirlist = dir =>
+    fs.readdirSync(dir).filter(
+       file => fs.statSync(path.resolve(dir, file)).isDirectory())
+  if(!Array.isArray(tasks)) tasks = tasks ? [tasks] : []
+  tasks = tasks.map(task => (task===task+'') ? {path: task} : task)
+  tasks = tasks.map(task => ({
+    prefix: '',
+    suffix: '',
+    ...task,
+  }))
+  const aliasMap = tasks.map(task => (
+    dirlist(task.path).reduce(
+      (a, alias) => ({
+        ...a,
+        [task.prefix + alias + task.suffix]:
+          path.join(task.path, alias)
+      }),
+      {}
+    )
+  )).reduce((a, map) => ({...a, ...map}), {})
+  return aliasMap
+}
+
 function configFilePath(configPath = '') {
   if(
     configPath.length > 0 && fs.existsSync(path.resolve(paths.appPath, configPath))
@@ -140,12 +164,13 @@ function configPathsRaw(confPath) {
 function configPaths(configPath = '') {
   const confPath = configFilePath(configPath)
   const paths = configPathsRaw(confPath)
-  return Object.keys(paths).reduce( (a, path) => {
+  const aliasMap = Object.keys(paths).reduce( (a, path) => {
     const value = paths[path]
     const target = Array.isArray(value) ? value[0] : value
     a[path.replace(/\/\*$/,'')] = target.replace(/\/\*$/,'')
     return a
   }, {})
+  return aliasMap
 }
 
 function defaultOptions(options) {
@@ -153,9 +178,14 @@ function defaultOptions(options) {
     options.tsconfig || options.jsconfig
   )
   const aliasMap = options.alias || configPaths(configPath)
+  const aliasAutoMap = autoscan(options.autoscan)
+
   const opts = {
     ...options,
-    aliasMap,
+    aliasMap: {
+      ...aliasAutoMap,
+      ...aliasMap,
+    },
   }
   return opts
 }
@@ -182,6 +212,7 @@ const CracoAliasPlugin = {
 module.exports = {
   aliasWebpack,
   aliasJest,
+  autoscan,
   configFilePath,
   configPathsRaw,
   configPaths,
