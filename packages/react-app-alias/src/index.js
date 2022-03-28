@@ -152,7 +152,7 @@ function configPathsRaw(conf) {
   const confPaths = conf.compilerOptions && conf.compilerOptions.paths ?
     conf.compilerOptions.paths : {}
 
-  const ext = conf.extends
+  const ext = conf.extends || {}
   const extPaths = ext.compilerOptions && ext.compilerOptions.paths ?
     ext.compilerOptions.paths : {}
 
@@ -160,7 +160,7 @@ function configPathsRaw(conf) {
     throw Error(`react-app-alias:configPathsRaw: compilerOptions.paths must be object`)
   if(typeof extPaths !== 'object')
     throw Error(`react-app-alias:configPathsRaw: compilerOptions.extends->compilerOptions.paths must be object`)
-  
+
   return {
     ...confPaths,
     ...extPaths,
