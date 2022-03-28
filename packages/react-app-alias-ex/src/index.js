@@ -96,7 +96,10 @@ function expandPluginsTsChecker(plugins, configPath) {
       ...(opts.compilerOptions || {}),
       paths,
     }
-    const options = {
+    const typescriptIsString = String(opts.typescript) === opts.typescript
+    const options = typescriptIsString ? {
+      ...opts, compilerOptions
+    } : {
       ...opts,
       typescript: {
         ...opts.typescript,
