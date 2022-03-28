@@ -98,6 +98,7 @@ function expandPluginsTsChecker(plugins, configPath) {
       ...(opts.compilerOptions || {}),
       paths,
     }
+    // https://github.com/oklas/react-app-alias/issues/44
     const typescriptIsString = String(opts.typescript) === opts.typescript
     const options = typescriptIsString ? {
       ...opts, compilerOptions
