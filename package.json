@@ -8,15 +8,17 @@
     "semantic-release-monorepo": "^7.0.5"
   },
   "scripts": {
-    "example:alias:install": "cd example/main && yarn install",
-    "example:aliasex:install": "cd example/above && yarn install",
-    "example:alias:test": "cd example/main && yarn test --watchAll=false",
-    "example:aliasex:test": "cd example/above && yarn test --watchAll=false",
-    "example:install": "yarn example:alias:install && yarn example:aliasex:install",
-    "example:test": "yarn example:alias:test && yarn example:aliasex:test",
+    "example:above:start": "cd example/above && yarn start",
+    "example:main:start": "cd example/main && yarn start",
+    "example:below:start": "cd example/below && yarn start",
+    "example:above:test": "cd example/above && yarn test --watchAll=false",
+    "example:main:test": "cd example/main && yarn test --watchAll=false",
+    "example:below:test": "cd example/below && yarn test --watchAll=false",
+    "example:install": "lerna buutstrap",
+    "example:test": "yarn example:below:test && yarn example:main:test && yarn example:above:test",
     "coverage": "jest --coverage",
     "test:unit": "jest",
-    "test:integration": "yarn example:alias:test && yarn example:aliasex:test",
+    "test:integration": "yarn example:test",
     "test": "yarn test:unit && yarn test:integration",
     "release": "lerna exec --concurrency 1 --scope 'react-app-alias*' -- npx --no-install semantic-release -e semantic-release-monorepo"
   }

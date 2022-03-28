@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "extends": "./59-tsconfig.paths.json",
     "paths": {
       "alias/*": [ "target/*" ]
     }
-  }
+  },
+  "extends": "./59-tsconfig.paths.json"
 }

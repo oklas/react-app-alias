@@ -2,7 +2,8 @@ const path = require('path')
 const paths = require('react-scripts/config/paths')
 const {
   aliasJest: aliasJestSafe,
-  configFilePath,
+  configFilePathSafe,
+  readConfig,
   configPathsRaw,
   configPaths,
   defaultOptions,
@@ -78,8 +79,9 @@ function packagePathsRaw() {
 
 function expandPluginsTsChecker(plugins, configPath) {
   const pluginName = 'ForkTsCheckerWebpackPlugin'
-  const confPath = configFilePath(configPath)
-  const tsjsPaths = configPathsRaw(confPath)
+  const confPath = configFilePathSafe(configPath)
+  const conf = readConfig(confPath) 
+  const tsjsPaths = configPathsRaw(conf)
   const packagePaths = packagePathsRaw(confPath)
   const pluginPos = plugins
     .map(x => x.constructor.name)
@@ -96,7 +98,11 @@ function expandPluginsTsChecker(plugins, configPath) {
       ...(opts.compilerOptions || {}),
       paths,
     }
-    const options = {
+    // https://github.com/oklas/react-app-alias/issues/44
+    const typescriptIsString = String(opts.typescript) === opts.typescript
+    const options = typescriptIsString ? {
+      ...opts, compilerOptions
+    } : {
       ...opts,
       typescript: {
         ...opts.typescript,

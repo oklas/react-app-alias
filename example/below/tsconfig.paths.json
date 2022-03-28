@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "paths": {
-      "alias-paths/*": [ "target-paths/*" ]
     }
   }
 }

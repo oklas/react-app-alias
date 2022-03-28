@@ -180,6 +180,22 @@ and replace `react-scripts` in `package.json`:
   }
 ```
 
+
+#### Using baseUrl
+
+* **`baseUrl = '.'`**
+
+  * able to create alias outside of `src` (near `src`)
+  * for each directory in `src` alias **does not** created automatically (must be declared manually)
+
+* **baseUrl = 'src'**
+
+  * alias outside of `src` is not possible, only in directory specified in `baseUrl`
+  * for each folder in `src` alias created automatically with same name as folder
+
+See also experimental [autoscan](https://github.com/oklas/react-app-alias/issues/70) feature
+
+
 #### API
 
 * **options**
@@ -187,8 +203,9 @@ and replace `react-scripts` in `package.json`:
 ```ts
   Options {
     alias?: { [alias: string]: string }; // optional alias map
-    tsconfig?: string, // optinal tsconfig.json path
-    jsconfig?: string, // options jsconfig.json path
+    tsconfig?: string, // optional tsconfig.json path
+    jsconfig?: string, // optional jsconfig.json path
+    baseUrl?: string, // optional by default from config
   }
 ```
 
