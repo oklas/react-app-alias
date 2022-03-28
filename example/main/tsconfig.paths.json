@@ -2,6 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
+      "Internal/*": [ "src/Internal/*" ],
       "near-src/*": [ "near-src/src/*" ]
     }
   }

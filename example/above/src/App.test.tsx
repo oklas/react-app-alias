@@ -8,6 +8,12 @@ test('renders text', () => {
   expect(linkElement).toBeInTheDocument();
 });
 
+test('renders internal component from src', () => {
+  render(<App />);
+  const nearElement = screen.getByText(/Internal/i);
+  expect(nearElement).toBeInTheDocument();
+});
+
 test('renders component from near src', () => {
   render(<App />);
   const nearElement = screen.getByText(/Near Src/i);

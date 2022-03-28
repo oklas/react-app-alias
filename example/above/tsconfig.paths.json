@@ -4,7 +4,8 @@
     "paths": {
       "above-root-ts/*": [ "../above-root-ts/src/*" ],
       "above-root-js/*": [ "../above-root-js/src/*" ],
-      "near-src/*": [ "near-src/src/*" ]
+      "near-src/*": [ "near-src/src/*" ],
+      "InternalEx/*": [ "src/InternalEx/*" ]
     }
   }
 }

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@craco/craco": "^6.4.3",
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^12.1.0",
     "@testing-library/user-event": "^13.5.0",
@@ -12,16 +13,15 @@
     "@types/react-dom": "^17.0.11",
     "react": "^17.0.2",
     "react-app-alias": "^0.0.0",
-    "react-app-rewired": "^2.1.6",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
     "typescript": "4.4.4",
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired test"
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test"
   },
   "eslintConfig": {
     "extends": [
