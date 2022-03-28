@@ -4,10 +4,10 @@ const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
 const paths = require('react-scripts/config/paths')
 
 const guessConfigFiles = [
-  'tsconfig.paths.json',
   'tsconfig.json',
-  'jsconfig.paths.json',
+  'tsconfig.paths.json',
   'jsconfig.json',
+  'jsconfig.paths.json',
 ]
 
 function expandResolveAlias(resolve, alias) {
@@ -71,10 +71,10 @@ function checkOutside(aliasMap) {
 }
 
 function aliasWebpack(options) {
-  const aliasMap = defaultOptions(options).aliasMap
+  const {aliasMap, baseUrl} = defaultOptions(options)
   checkOutside(aliasMap)
   const aliasLocal = Object.keys(aliasMap).reduce( (a,i) => {
-    a[i] = path.resolve(paths.appPath, aliasMap[i])
+    a[i] = path.resolve(paths.appPath, baseUrl, aliasMap[i])
     return a
   }, {})
   return function(config) {
@@ -86,8 +86,8 @@ function aliasWebpack(options) {
 }
 
 function aliasJest(options) {
-  const aliasMap = defaultOptions(options).aliasMap
-  const jestAliasMap = aliasMapForJest(aliasMap)
+  const {baseUrl, aliasMap} = defaultOptions(options)
+  const jestAliasMap = aliasMapForJest(baseUrl, aliasMap)
   return function(config) {
     return {
       ...config,
@@ -123,7 +123,7 @@ function autoscan(tasks) {
   return aliasMap
 }
 
-function configFilePath(configPath = '') {
+function configFilePathSafe(configPath = '') {
   if(
     configPath.length > 0 && fs.existsSync(path.resolve(paths.appPath, configPath))
   ) return path.resolve(paths.appPath, configPath)
@@ -134,26 +134,32 @@ function configFilePath(configPath = '') {
   return existsPaths.length ? existsPaths[0] : ''
 }
 
-function configPathsRaw(confPath) {
+function readConfig(confPath) {
   if(!confPath)
-    throw Error('react-app-alias:configPaths: there is no [ts|js]config file found')
+    throw Error('react-app-alias:readConfig: there is no [ts|js]config file found')
 
   const confdir = path.dirname(confPath)
-  const conf = require(confPath)
+  const conf = {...require(confPath)}
+
+  const extUrl = conf.extends
+  const extPath = extUrl ? path.resolve(confdir, extUrl) : ''
+  conf.extends = extUrl ? require(extPath) : {}
+
+  return conf
+}
+
+function configPathsRaw(conf) {
   const confPaths = conf.compilerOptions && conf.compilerOptions.paths ?
     conf.compilerOptions.paths : {}
 
-  const extUrl = conf.compilerOptions.extends
-  const extPath = extUrl ? path.resolve(confdir, extUrl) : ''
-  const ext = extUrl ? require(extPath) : {}
-
+  const ext = conf.extends
   const extPaths = ext.compilerOptions && ext.compilerOptions.paths ?
     ext.compilerOptions.paths : {}
 
   if(typeof confPaths !== 'object')
-    throw Error(`react-app-alias:configPaths: '${confPath}' array expected for paths`)
+    throw Error(`react-app-alias:configPathsRaw: compilerOptions.paths must be object`)
   if(typeof extPaths !== 'object')
-    throw Error(`react-app-alias:configPaths: '${extPath}' array expected for paths`)
+    throw Error(`react-app-alias:configPathsRaw: compilerOptions.extends->compilerOptions.paths must be object`)
   
   return {
     ...confPaths,
@@ -161,9 +167,10 @@ function configPathsRaw(confPath) {
   }
 }
 
-function configPaths(configPath = '') {
-  const confPath = configFilePath(configPath)
-  const paths = configPathsRaw(confPath)
+function configPaths(configPath = '', confUndoc) {
+  const confPath = configFilePathSafe(configPath)
+  const conf = confUndoc || readConfig(confPath) 
+  const paths = configPathsRaw(conf)
   const aliasMap = Object.keys(paths).reduce( (a, path) => {
     const value = paths[path]
     const target = Array.isArray(value) ? value[0] : value
@@ -174,13 +181,19 @@ function configPaths(configPath = '') {
 }
 
 function defaultOptions(options) {
-  const configPath = configFilePath(
+  const configPath = configFilePathSafe(
     options.tsconfig || options.jsconfig
   )
-  const aliasMap = options.alias || configPaths(configPath)
+  const conf = readConfig(configPath)
+  
+  const aliasMap = options.alias || configPaths(configPath, conf)
   const aliasAutoMap = autoscan(options.autoscan)
 
+  if(options.autoscan)
+    console.warn('react-app-alias: You are using experimental `autoscan` feature (https://github.com/oklas/react-app-alias/issues/70) it is not documented and may be it will be removed')
+
   const opts = {
+    baseUrl: conf.compilerOptions.baseUrl || '.',
     ...options,
     aliasMap: {
       ...aliasAutoMap,
@@ -190,12 +203,12 @@ function defaultOptions(options) {
   return opts
 }
 
-function aliasMapForJest(aliasMap) {
+function aliasMapForJest(baseUrl, aliasMap) {
   return Object.keys(aliasMap).reduce( (a, i) => {
     const outside = isOutsideOfRoot(aliasMap[i])
     const restr = i.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
     const alias = `^${restr}/(.*)$`
-    const targ = outside ? path.resolve(aliasMap[i])+'/$1' : `<rootDir>/${aliasMap[i]}/$1`
+    const targ = outside ? path.resolve(baseUrl, aliasMap[i])+'/$1' : `<rootDir>/${aliasMap[i]}/$1`
     return { ...a, [alias]: targ }
   }, {})
 }
@@ -213,7 +226,8 @@ module.exports = {
   aliasWebpack,
   aliasJest,
   autoscan,
-  configFilePath,
+  configFilePathSafe,
+  readConfig,
   configPathsRaw,
   configPaths,
   defaultOptions,

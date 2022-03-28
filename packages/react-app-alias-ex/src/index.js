@@ -2,7 +2,8 @@ const path = require('path')
 const paths = require('react-scripts/config/paths')
 const {
   aliasJest: aliasJestSafe,
-  configFilePath,
+  configFilePathSafe,
+  readConfig,
   configPathsRaw,
   configPaths,
   defaultOptions,
@@ -78,8 +79,9 @@ function packagePathsRaw() {
 
 function expandPluginsTsChecker(plugins, configPath) {
   const pluginName = 'ForkTsCheckerWebpackPlugin'
-  const confPath = configFilePath(configPath)
-  const tsjsPaths = configPathsRaw(confPath)
+  const confPath = configFilePathSafe(configPath)
+  const conf = readConfig(confPath) 
+  const tsjsPaths = configPathsRaw(conf)
   const packagePaths = packagePathsRaw(confPath)
   const pluginPos = plugins
     .map(x => x.constructor.name)
