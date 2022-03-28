@@ -180,6 +180,20 @@ and replace `react-scripts` in `package.json`:
   }
 ```
 
+
+#### Using baseUrl
+
+* **`baseUrl = '.'`**
+
+  * able to create alias outside of `src` (near `src`)
+  * for each directory in `src` alias **does not** created automatically (must be declared manually)
+
+* **baseUrl = 'src'**
+
+  * alias outside of `src` is not possible, only in directory specified in `baseUrl`
+  * for each folder in `src` alias created automatically with same name as folder
+
+
 #### API
 
 * **options**
