@@ -207,9 +207,20 @@ function aliasMapForJest(baseUrl, aliasMap) {
   return Object.keys(aliasMap).reduce( (a, i) => {
     const outside = isOutsideOfRoot(aliasMap[i])
     const restr = i.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-    const alias = `^${restr}/(.*)$`
-    const targ = outside ? path.resolve(baseUrl, aliasMap[i])+'/$1' : `<rootDir>/${aliasMap[i]}/$1`
-    return { ...a, [alias]: targ }
+    const aliases = {};
+
+    const targ = outside ? path.resolve(baseUrl, aliasMap[i]) : `<rootDir>/${aliasMap[i]}`
+
+    const isFile = path.extname(aliasMap[i]).length > 0
+
+    if (isFile) {
+      aliases[`^${restr}$`] = targ
+    } else {
+      aliases[`^${restr}$`] = targ
+      aliases[`^${restr}/(.*)$`] = `${targ}/$1`
+    }
+
+    return { ...a, ...aliases }
   }, {})
 }
 
