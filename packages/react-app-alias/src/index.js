@@ -180,7 +180,7 @@ function configPaths(configPath = '', confUndoc) {
   return aliasMap
 }
 
-function defaultOptions(options) {
+function defaultOptions(options = {}) {
   const configPath = configFilePathSafe(
     options.tsconfig || options.jsconfig
   )
