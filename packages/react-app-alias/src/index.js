@@ -143,8 +143,10 @@ function readConfig(confPath) {
 
   const extUrl = conf.extends
   const extPath = extUrl ? path.resolve(confdir, extUrl) : ''
+  if(extPath && !fs.existsSync(extPath))
+    throw Error(`react-app-alias:readConfig: '${confPath}' field 'extends' is '${extPath}' - not exists'`)
   conf.extends = extUrl ? require(extPath) : {}
-
+  
   return conf
 }
 
