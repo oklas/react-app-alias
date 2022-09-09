@@ -195,8 +195,27 @@ and replace `react-scripts` in `package.json`:
 
 See also experimental [autoscan](https://github.com/oklas/react-app-alias/issues/70) feature
 
+### Using SWC etc
 
-#### API
+Plugin SWC must be declared in plugin section before alias plugn. This is because
+SWC plugn recreate SWC configuration instead of babel configuration. Both babel and
+swc configurations originally without alias configuration. So to configure alias,
+alias plugin must be aplied after SWC plugin:
+
+```js
+const { CracoAliasPlugin } = require('react-app-alias');
+const CracoSwcPlugin = require('craco-swc');
+
+module.exports = {
+  plugins: [
+    { plugin: CracoSwcPlugin },
+    { plugin: CracoAliasPlugin },
+  ],
+}
+```
+
+
+### API
 
 * **options**
 
