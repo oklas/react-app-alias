@@ -122,7 +122,7 @@ function aliasJest(options) {
       ...expanded,
       moduleDirectories: [
         ...(config.moduleDirectories || ['node_modules']),
-        path.relative(expanded.rootDir, path.resolve(paths.appPath, 'node_modules'))
+        path.resolve(paths.appPath, 'node_modules')
       ],
     }
   }
